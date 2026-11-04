@@ -694,7 +694,7 @@ function renderLog() {
   `<a href="#stats" class="tile voucher-tile" data-act="go-stock">
     <div class="k">今天發出的禮券</div>
     <div class="vt-row"><span><b>${signed.filter(c => c.tier === "100").length}</b> 張 100 元</span><span><b>${signed.filter(c => c.tier === "50").length}</b> 張 50 元</span></div>
-    <div class="k vt-left">${hasStock ? `庫存還剩：100 元 <b class="${left["100"] <= 5 ? "low" : ""}">${left["100"]}</b> 張・50 元 <b class="${left["50"] <= 5 ? "low" : ""}">${left["50"]}</b> 張` : "還沒登記禮券庫存，點這裡新增"}</div>
+    <div class="k vt-left">${hasStock ? "庫存還剩：" + ["100", "50"].map(d => stockBought(d) ? `${d} 元 <b class="${left[d] <= 5 ? "low" : ""}">${Math.max(0, left[d])}</b> 張` : `${d} 元 <b class="low">未登記</b>`).join("・") : "還沒登記禮券庫存，點這裡新增"}</div>
   </a>`;
   const recent = S.contacts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.ts || 0) - (a.ts || 0)).slice(0, 30);
   let html = "", lastD = null;
@@ -1014,6 +1014,7 @@ function renderStats() {
   `;
   renderStock();
 }
+function stockBought(d) { return sum(S.stock.filter(s => String(s.denom) === d).map(s => s.qty)); }
 function stockLeft() {
   const out = {};
   ["100", "50"].forEach(d => {
@@ -1029,7 +1030,8 @@ function renderStock() {
     const out = all.filter(c => c.tier === d).length;
     const wk = all.filter(c => c.tier === d && c.date >= mon).length;
     const left = inQ - out;
-    return `<div class="tile"><div class="n" style="${left <= 5 && inQ ? "color:var(--bad)" : ""}">${left}</div><div class="k">${d} 元剩餘・本週發 ${wk}・共買 ${inQ}</div></div>`;
+    if (!inQ) return `<div class="tile"><div class="k">${d} 元還剩</div><div class="n" style="font-size:20px;color:var(--bad)">未登記</div><div class="k">本週發 ${wk} 張</div></div>`;
+    return `<div class="tile"><div class="k">${d} 元還剩</div><div class="n" style="${left <= 5 ? "color:var(--bad)" : ""}">${Math.max(0, left)} 張</div><div class="k">本週發 ${wk}・共買 ${inQ}</div></div>`;
   }).join("");
   $("#stockBox").innerHTML = `<div class="tiles">${box}</div>`;
 }
