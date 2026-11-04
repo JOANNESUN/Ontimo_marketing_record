@@ -96,10 +96,22 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .voucher-out.v50 .amt{color:var(--sky)}
 .voucher-out.vnone{border-color:var(--petunia);border-style:dashed;background:var(--bad-soft)}
 .voucher-out.vnone .amt{color:var(--muted)}
-.check{display:flex;align-items:center;gap:12px;min-height:52px;margin-top:4px;font-size:17px;color:var(--ink);background:var(--field);border:2px solid var(--line);
-  border-radius:12px;padding:0 14px}
-.check.ig-tick{margin-top:14px;font-weight:700;border-color:var(--primary)}
-.check input{width:24px;height:24px;accent-color:var(--accent);flex:0 0 auto}
+.for-banner{background:var(--accent-soft);border-radius:14px;padding:12px 14px;display:grid;gap:2px}
+.for-banner .k{font-size:14px;color:var(--muted)}
+.for-banner b{font-size:17px;color:var(--ink)}
+.pick-ideas{display:grid;gap:10px;border-top:1px solid #EFE6FF;padding-top:12px}
+.pick-idea{background:var(--accent-soft);border-radius:14px;padding:12px 14px;display:grid;gap:6px}
+.pick-idea .acts{display:flex;gap:8px;justify-content:flex-end}
+.pick-idea .acts button{min-height:38px;font-size:14px}
+.add-idea{background:var(--primary);color:#fff;border:0;border-radius:12px;font:inherit;font-weight:700;font-size:16px;min-height:48px;padding:0 16px;cursor:pointer}
+.check{display:flex;align-items:center;gap:12px;min-height:54px;margin-top:4px;padding:0 16px;font-size:17px;color:var(--ink);
+  background:var(--field);border:2px solid var(--line);border-radius:12px;cursor:pointer}
+.check input{-webkit-appearance:none;appearance:none;flex:0 0 auto;width:24px;height:24px;margin:0;border:2px solid var(--line);
+  border-radius:8px;background:#fff;display:grid;place-content:center;cursor:pointer}
+.check input::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px);opacity:0}
+.check input:checked{background:var(--primary);border-color:var(--primary)}
+.check input:checked::after{opacity:1}
+.check:has(input:checked){background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
 button.primary{background:var(--primary);color:var(--primary-ink);border:0;border-radius:14px;font:inherit;
   font-weight:700;font-size:18px;min-height:56px;width:100%;margin-top:20px;cursor:pointer}
 button.primary:disabled{opacity:.6}
@@ -243,7 +255,8 @@ nav.tabs a.on svg{background:var(--accent-soft);border-radius:10px;padding:3px;w
       <label class="photo-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>拍照或選照片<input type="file" accept="image/*" id="c-photo"></label>
       <div class="preview" id="c-preview"></div>
     </div>
-    <label class="check ig-tick"><input type="checkbox" id="c-igworthy"> 適合放 IG（會出現在「靈感」）</label>
+    <div class="lbl">IG 素材</div>
+    <label class="check"><input type="checkbox" id="c-igworthy"> 適合放 IG（會出現在「靈感」）</label>
     <label class="lbl" for="c-note">備註（選填）</label>
     <textarea id="c-note" placeholder="對方說了什麼、有什麼想法"></textarea>
     <div class="save-bar"><button class="primary" type="submit" id="c-save">儲存這筆</button></div>
@@ -302,18 +315,20 @@ nav.tabs a.on svg{background:var(--accent-soft);border-radius:10px;padding:3px;w
 
 <!-- 靈感 -->
 <section class="view" id="v-ideas">
-  <form id="fIdea" class="card form" novalidate>
-    <div class="edit-banner" hidden>正在編輯 <button type="button" class="ghost" data-act="cancel-idea">取消編輯</button></div>
+  <p class="small" id="ideasIntro" style="margin:0 0 12px;color:var(--on-bg-muted)">在「記錄」勾選「適合放 IG」的民眾會出現在這裡。點「＋ 寫靈感」，寫下的內容會接在那位民眾下面。</p>
+  <form id="fIdea" class="card form" novalidate hidden>
+    <div class="for-banner" id="i-for"></div>
+    <div class="edit-banner" hidden>正在編輯這則靈感</div>
     <label class="lbl" for="i-text">想法</label>
     <textarea id="i-text" placeholder="有效的話術、民眾說的一句話、IG 可以拍什麼、App 可以改什麼"></textarea>
     <div class="lbl">類別</div><div class="chips" data-name="itag"></div>
     <div class="lbl">照片（選填，拍到人請先問過）</div>
     <label class="photo-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>拍照或選照片<input type="file" accept="image/*" id="i-photo"></label>
     <div class="preview" id="i-preview"></div>
-    <button class="primary" type="submit">貼到靈感牆</button>
+    <button class="primary" type="submit">加到這位民眾</button>
+    <button class="ghost" type="button" data-act="cancel-idea" style="width:100%;min-height:48px">取消</button>
   </form>
-  <div class="chips scroll" data-name="ifilter" style="margin-top:18px;margin-bottom:12px"></div>
-  <div class="list" id="ideaList"></div>
+  <div class="list" id="ideaList" style="margin-top:14px"></div>
 </section>
 
 <!-- 數據 -->
@@ -439,7 +454,7 @@ const CHIPDEF = {
   traffic: [["1","1"],["2","2"],["3","3"],["4","4"],["5","5"]],
   owner: [["warm","很歡迎"],["ok","普通"],["cold","不太歡迎"]],
   slot: [["am","上午"],["noon","中午"],["pm","下午"]],
-  itag: ITAG, ifilter: [["all","全部"],["igpick","IG 素材"]].concat(ITAG),
+  itag: ITAG,
   lcat: [["all","全部"]].concat(CATS),
   range: [["all","全部"],["today","今天"],["week","本週"],["last","上週"]],
   lstatus: STATUS
@@ -483,7 +498,7 @@ async function uploadPhoto(blob) { return api("POST", "/api/photos", blob, blob.
 /* ---------- Login ---------- */
 function showLogin() { $("#loginSheet").hidden = false; setTimeout(() => $("#login-pass").focus(), 50); }
 let me = lsGet("ontimo_me") || "";
-let editing = { contact: null, session: null, idea: null, loc: null };
+let editing = { contact: null, session: null, idea: null, ideaFor: null, loc: null };
 let pendingPhoto = { contact: null, idea: null };   // {file} new, or {keep:{id,url}} existing, or null
 let gotData = false, askedMe = false;
 
@@ -951,12 +966,30 @@ document.addEventListener("click", e => {
 
 /* ---------- Ideas ---------- */
 const fI = $("#fIdea");
+function pickFacts(c) {
+  const ok = c.outcome === "signed";
+  return [label(WHO, c.who), c.age ? label(AGE, c.age) : "", ok ? comboLabel(c) : "拒絕", ok && c.tier && c.tier !== "0" ? "禮券 " + c.tier : ""].filter(Boolean).join("・");
+}
 function resetIdea() {
-  editing.idea = null; pendingPhoto.idea = null; $("#i-text").value = ""; $("#i-photo").value = "";
-  showPreview("idea", ""); setChips(fI, "itag", ""); $(".edit-banner", fI).hidden = true;
+  editing.idea = null; editing.ideaFor = null; pendingPhoto.idea = null; $("#i-text").value = ""; $("#i-photo").value = "";
+  showPreview("idea", ""); setChips(fI, "itag", ""); $(".edit-banner", fI).hidden = true; fI.hidden = true;
+}
+// Open the form linked to one IG-worthy record (contactId); optionally editing an existing idea
+function openIdeaFor(contactId, ideaId) {
+  const c = S.contacts.find(x => x.id === contactId); if (!c) return;
+  resetIdea(); editing.ideaFor = contactId;
+  $("#i-for").innerHTML = `<span class="k">寫給這位民眾</span><b>${esc(pickFacts(c))}</b><span class="k">${esc(locName(c.locationId))}・${esc(dateLabel(c.date))}</span>`;
+  if (ideaId) {
+    const x = S.inspo.find(i => i.id === ideaId);
+    if (x) { editing.idea = ideaId; $("#i-text").value = x.text || ""; setChips(fI, "itag", x.tag);
+      if (x.photo) { pendingPhoto.idea = { keep: x.photo }; showPreview("idea", imgSrc(x.photo)); }
+      $(".edit-banner", fI).hidden = false; }
+  }
+  fI.hidden = false; location.hash = "ideas"; window.scrollTo({ top: 0 }); setTimeout(() => $("#i-text").focus(), 60);
 }
 fI.onsubmit = async e => {
   e.preventDefault(); if (needMe()) return;
+  if (!editing.ideaFor) return toast("請先在下面選一位民眾，點「＋ 寫靈感」");
   const text = $("#i-text").value.trim();
   if (!text && !pendingPhoto.idea) return toast("寫點東西或放照片");
   const btn = $("button[type=submit]", fI); btn.disabled = true;
@@ -964,52 +997,53 @@ fI.onsubmit = async e => {
     const photo = await uploadPending("idea");
     const prev = editing.idea ? S.inspo.find(x => x.id === editing.idea) : null;
     const data = { text, url: prev ? (prev.url || "") : "", tag: getChips(fI, "itag") || "other", photo: photo || null,
-      promoterId: prev ? prev.promoterId : me, ts: prev ? prev.ts : Date.now(), updatedAt: Date.now() };
+      contactId: editing.ideaFor, promoterId: prev ? prev.promoterId : me, ts: prev ? prev.ts : Date.now(), updatedAt: Date.now() };
     if (editing.idea) await db.collection("inspo").doc(editing.idea).set(data); else await db.collection("inspo").add(data);
-    toast("已貼上 ✓"); resetIdea();
+    toast("已加到這位民眾 ✓"); resetIdea();
   } catch (err) { toast("儲存失敗：" + (err.message || err.code)); }
   btn.disabled = false;
 };
 function editIdea(id) {
   const x = S.inspo.find(i => i.id === id); if (!x) return;
-  resetIdea(); editing.idea = id; $("#i-text").value = x.text || ""; setChips(fI, "itag", x.tag);
-  if (x.photo) { pendingPhoto.idea = { keep: x.photo }; showPreview("idea", imgSrc(x.photo)); }
-  $(".edit-banner", fI).hidden = false; location.hash = "ideas"; window.scrollTo({ top: 0 });
+  if (x.contactId) return openIdeaFor(x.contactId, id);
+  toast("這則舊靈感沒有連結到民眾，只能刪除");
 }
-$("#v-ideas").addEventListener("chipchange", e => { if (e.detail.name === "ifilter") renderIdeas(); });
-function ideaCard(x) {
-  const isIG = /instagram\.com/i.test(x.url || "");
+function ideaItem(x) {
   const d = new Date(x.ts || 0);
-  return `<div class="row">
-    <div class="meta">${esc(promName(x.promoterId))}・${ymd(d)}　<span class="pill plain">${esc(label(ITAG, x.tag))}</span></div>
+  return `<div class="pick-idea">
+    <div class="meta">${esc(promName(x.promoterId))}・${esc(dateLabel(ymd(d)))}　<span class="pill plain">${esc(label(ITAG, x.tag))}</span></div>
     ${x.text ? `<div style="white-space:pre-wrap">${esc(x.text)}</div>` : ""}
-    ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener" class="linkbtn">${isIG ? "▶ 開啟 IG" : "開啟連結"}</a>` : ""}
+    ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener" class="linkbtn">${/instagram\.com/i.test(x.url) ? "▶ 開啟 IG" : "開啟連結"}</a>` : ""}
     ${x.photo ? `<img class="thumb" loading="lazy" src="${esc(imgSrc(x.photo))}" alt="靈感照片">` : ""}
     <div class="acts"><button class="ghost" type="button" data-edit-idea="${esc(x.id)}">編輯</button><button class="ghost danger" type="button" data-del="inspo" data-id="${esc(x.id)}">刪除</button></div>
   </div>`;
 }
-// A 記錄 entry ticked 適合放 IG, linked by its record id
+// One IG-worthy person, with every idea written for them appended underneath
 function pickCard(c) {
-  const ok = c.outcome === "signed";
-  const facts = [label(WHO, c.who), c.age ? label(AGE, c.age) : "", ok ? comboLabel(c) : "拒絕", ok && c.tier && c.tier !== "0" ? "禮券 " + c.tier : ""].filter(Boolean);
+  const ideas = S.inspo.filter(x => x.contactId === c.id).sort((a, b) => (a.ts || 0) - (b.ts || 0));
   return `<div class="row pick">
     <div class="meta"><span class="pill">IG 素材</span>　${esc(promName(c.promoterId))}・${esc(dateLabel(c.date))}・${esc(locName(c.locationId))}</div>
-    <div style="font-weight:700">${esc(facts.join("・"))}</div>
-    ${c.photo ? `<img class="thumb" loading="lazy" src="${esc(imgSrc(c.photo))}" alt="現場照片">` : `<div class="small muted">沒有照片</div>`}
+    <div style="font-weight:700">${esc(pickFacts(c))}</div>
+    ${c.photo ? `<img class="thumb" loading="lazy" src="${esc(imgSrc(c.photo))}" alt="現場照片">` : ""}
     ${c.note ? `<div style="white-space:pre-wrap">${esc(c.note)}</div>` : ""}
     ${c.diffNote ? `<div class="small"><b>使用困難：</b>${esc(c.diffNote)}</div>` : ""}
+    ${ideas.length ? `<div class="pick-ideas"><div class="lbl" style="margin:0">靈感（${ideas.length}）</div>${ideas.map(ideaItem).join("")}</div>` : ""}
+    <button type="button" class="add-idea" data-idea-for="${esc(c.id)}">＋ 寫靈感</button>
     <div class="acts"><button class="ghost" type="button" data-edit-contact="${esc(c.id)}">開啟紀錄</button><button class="ghost" type="button" data-unpick="${esc(c.id)}">移出靈感</button></div>
   </div>`;
 }
 function renderIdeas() {
-  const f = getChips($("#v-ideas"), "ifilter") || "all";
-  const picks = (f === "all" || f === "igpick") ? S.contacts.filter(c => c.igWorthy).map(c => ({ ts: c.ts || 0, html: pickCard(c) })) : [];
-  const ideas = f === "igpick" ? [] : S.inspo.filter(x => f === "all" || x.tag === f).map(x => ({ ts: x.ts || 0, html: ideaCard(x) }));
-  const list = picks.concat(ideas).sort((a, b) => b.ts - a.ts);
-  $("#ideaList").innerHTML = list.length ? list.map(x => x.html).join("")
-    : `<div class="empty-note">${f === "igpick" ? "還沒有 IG 素材。在「記錄」勾選「適合放 IG」，那筆就會出現在這裡。" : "靈感牆還是空的。寫下有用的話術、民眾說的話，或在「記錄」勾選「適合放 IG」。"}</div>`;
+  const picks = S.contacts.filter(c => c.igWorthy).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  const loose = S.inspo.filter(x => !x.contactId || !picks.some(c => c.id === x.contactId)).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  let html = picks.length ? picks.map(pickCard).join("")
+    : `<div class="empty-note">還沒有 IG 素材。在「記錄」勾選「適合放 IG」，那位民眾就會出現在這裡。</div>`;
+  if (loose.length) html += `<h3 style="margin:22px 0 4px">沒有連結到民眾的靈感</h3><div class="list">${loose.map(x => `<div class="row">${ideaItem(x)}</div>`).join("")}</div>`;
+  $("#ideaList").innerHTML = html;
+  // If the person being written for was un-ticked, close the form
+  if (editing.ideaFor && !picks.some(c => c.id === editing.ideaFor)) resetIdea();
 }
 document.addEventListener("click", async e => {
+  const f = e.target.closest("[data-idea-for]"); if (f) return openIdeaFor(f.dataset.ideaFor);
   const b = e.target.closest("[data-unpick]"); if (!b) return;
   try { await db.collection("contacts").doc(b.dataset.unpick).update({ igWorthy: false, updatedAt: Date.now() }); toast("已移出靈感"); }
   catch (err) { toast("失敗：" + (err.message || err.code)); }
@@ -1185,7 +1219,7 @@ $("#fLogin").onsubmit = async e => {
 
 /* ---------- Init ---------- */
 buildChips();
-setChips($("#v-ideas"), "ifilter", "all"); setChips($("#v-places"), "lcat", "all"); setChips($("#v-stats"), "range", "all");
+setChips($("#v-places"), "lcat", "all"); setChips($("#v-stats"), "range", "all");
 $("#s-date").value = today();
 resetContact(); resetLoc(); route(); renderAll();
 
