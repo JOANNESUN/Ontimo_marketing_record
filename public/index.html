@@ -44,10 +44,11 @@ h2{font-size:20px;margin:28px 0 12px;text-wrap:balance}
 h3{font-size:17px;margin:20px 0 8px}
 .view{display:none;padding:16px 0 24px}
 .view.on{display:block}
-.card{background:var(--surface);border-radius:var(--r);padding:16px}
-.form{display:grid;gap:10px;min-width:0}
-.lbl{font-size:16px;font-weight:700;color:var(--ink);margin-top:10px}
-.lbl + .chips,.lbl + input,.lbl + select,.lbl + textarea{margin-top:-2px}
+.card{background:var(--surface);border-radius:var(--r);padding:18px 16px}
+.form{display:grid;gap:12px;min-width:0}
+.lbl{font-size:16px;font-weight:700;color:var(--ink);margin-top:22px}
+.form > .lbl:first-child,.form > .split:first-child .lbl{margin-top:0}
+.lbl + .chips,.lbl + input,.lbl + select,.lbl + textarea{margin-top:0}
 input[type=text],input[type=number],input[type=date],input[type=time],input[type=url],input[type=password],select,textarea{
   display:block;width:100%;min-width:0;max-width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--field);
   border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-height:52px;-webkit-appearance:none;appearance:none}
@@ -65,7 +66,7 @@ textarea{min-height:88px;resize:vertical}
 input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible,a:focus-visible{
   outline:3px solid var(--accent);outline-offset:2px}
 /* Chips: even grid so buttons line up; data-cols sets columns, .scroll makes a swipe row */
-.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .chips[data-cols="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
 .chips[data-cols="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
 .chips[data-cols="5"]{grid-template-columns:repeat(5,minmax(0,1fr))}
@@ -73,25 +74,35 @@ input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-vis
 .chips.scroll::-webkit-scrollbar{display:none}
 .chips.scroll .chip{flex:0 0 auto;padding:0 18px}
 .chip{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:12px;
-  padding:8px 6px;font:inherit;font-size:16px;line-height:1.25;min-height:50px;cursor:pointer;text-align:center;min-width:0}
+  padding:8px 6px;font:inherit;font-size:16px;line-height:1.25;min-height:52px;cursor:pointer;text-align:center;min-width:0}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
 .chips.big .chip{min-height:60px;font-size:19px;font-weight:700}
 .chips[data-name="outcome"] .chip[data-v="declined"][aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:var(--bad-ink)}
-.chips[data-name="tier"] .chip[data-v="50"][aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--sky-ink)}
-.check{display:flex;align-items:center;gap:12px;min-height:52px;font-size:17px;background:var(--field);border:1px solid var(--line);
+.voucher-out{margin-top:10px;border-radius:14px;padding:14px 16px;display:grid;gap:2px;background:var(--field);border:2px solid var(--line)}
+.voucher-out .amt{font-size:26px;font-weight:700;line-height:1.2}
+.voucher-out .why{font-size:15px;color:var(--muted)}
+.voucher-out.v100{border-color:var(--accent);background:var(--accent-soft)}
+.voucher-out.v100 .amt{color:var(--accent)}
+.voucher-out.v50{border-color:var(--sky);background:rgba(140,203,255,.15)}
+.voucher-out.v50 .amt{color:var(--sky)}
+.voucher-out.vnone .amt{color:var(--muted)}
+.check{display:flex;align-items:center;gap:12px;min-height:52px;margin-top:4px;font-size:17px;background:var(--field);border:1px solid var(--line);
   border-radius:12px;padding:0 14px}
 .check input{width:24px;height:24px;accent-color:var(--accent);flex:0 0 auto}
-button.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:14px;font:inherit;
-  font-weight:700;font-size:18px;min-height:56px;width:100%;margin-top:12px;cursor:pointer}
+button.primary{background:#FFFFFF;color:#123B73;border:0;border-radius:14px;font:inherit;
+  font-weight:700;font-size:18px;min-height:56px;width:100%;margin-top:20px;cursor:pointer}
 button.primary:disabled{opacity:.6}
-.sticky-save{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom));z-index:3;
-  box-shadow:0 -10px 16px -6px var(--surface)}
+.save-bar{position:sticky;bottom:calc(64px + env(safe-area-inset-bottom));z-index:3;margin:20px -16px -18px;
+  padding:12px 16px 14px;background:var(--surface);border-top:1px solid var(--line);border-radius:0 0 var(--r) var(--r)}
+.save-bar button.primary{margin-top:0}
 button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:12px;
   font:inherit;font-size:15px;min-height:44px;padding:8px 14px;cursor:pointer}
 button.danger{color:var(--bad);border-color:var(--bad-soft)}
 .edit-banner{background:var(--accent-soft);border:1px solid var(--accent);border-radius:12px;padding:10px 12px;display:flex;align-items:center;
   justify-content:space-between;gap:8px;font-size:15px;font-weight:700}
 .edit-banner[hidden]{display:none}
+[hidden]{display:none !important}
+[data-show]{display:grid;gap:12px}
 .preview img{max-width:100%;border-radius:12px;margin-top:8px;display:block}
 .today{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
 .voucher-tile{grid-column:1 / -1;display:grid;gap:4px;text-decoration:none;color:var(--ink);border:1px solid var(--line)}
@@ -157,7 +168,7 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
 .inline{display:flex;gap:8px}
 .inline > *{flex:1;min-width:0}
 .inline > button{flex:0 0 auto}
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom));z-index:30;
+#toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(72px + env(safe-area-inset-top));z-index:30;
   background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-size:16px;font-weight:700;max-width:90vw;display:none}
 #banner{background:var(--accent-soft);font-size:15px;padding:8px 16px;text-align:center}
 #banner[hidden]{display:none}
@@ -197,8 +208,11 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
     <div class="lbl">年齡（大約）</div><div class="chips" data-name="age" data-cols="3"></div>
     <div class="lbl">結果</div><div class="chips big" data-name="outcome"></div>
     <div data-show="signed" hidden>
-      <div class="lbl">禮券</div><div class="chips" data-name="tier" data-cols="3"></div>
-      <div class="lbl">完成項目（看過手機畫面才勾）</div><div class="chips" data-name="checks" data-multi="1"></div>
+      <div class="lbl">App 裝在哪種手機（看過手機畫面才點）</div><div class="chips" data-name="platform" data-cols="3"></div>
+      <div class="chips" data-name="med" id="c-med" style="grid-template-columns:1fr" hidden></div>
+      <div class="lbl">另外加了</div><div class="chips" data-name="social" data-multi="1"></div>
+      <div class="voucher-out" id="c-voucher" aria-live="polite"></div>
+      <label class="check"><input type="checkbox" id="c-novoucher"> 對方不要禮券</label>
     </div>
     <div data-show="declined" hidden>
       <div class="lbl">拒絕原因（可複選）</div><div class="chips" data-name="reasons" data-multi="1"></div>
@@ -214,7 +228,7 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
     </div>
     <label class="lbl" for="c-note">備註（選填）</label>
     <textarea id="c-note" placeholder="對方說了什麼、有什麼想法"></textarea>
-    <button class="primary sticky-save" type="submit" id="c-save">儲存這筆</button>
+    <div class="save-bar"><button class="primary" type="submit" id="c-save">儲存這筆</button></div>
   </form>
   <h2>最近紀錄</h2>
   <div class="list" id="recentList"></div>
@@ -236,7 +250,7 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
     <div class="lbl">人最多的時段（可複選）</div><div class="chips" data-name="slot" data-multi="1" data-cols="3"></div>
     <label class="lbl" for="s-note">這次的心得</label>
     <textarea id="s-note" placeholder="哪種人最願意聽？哪句話最有用？下次要改什麼？"></textarea>
-    <button class="primary sticky-save" type="submit">儲存今天</button>
+    <div class="save-bar"><button class="primary" type="submit">儲存今天</button></div>
   </form>
   <h2>每日小結</h2>
   <div class="list" id="sessionList"></div>
@@ -378,7 +392,23 @@ const sum = a => a.reduce((x, y) => x + (Number(y) || 0), 0);
 const fmtMoney = n => "NT$" + Math.round(n).toLocaleString("en-US");
 
 const WHO = [["senior","長輩（自己領藥）"],["child","幫爸媽領藥的子女"],["self","中年自己用"],["carer","看護／照顧者"],["other","其他"]];
-const AGE = [["<30","30 以下"],["30-44","30–44"],["45-59","45–59"],["60-74","60–74"],["75+","75 以上"]];
+const AGE = [["<30","30 以下"],["30-49","30–49"],["50-64","50–64"],["65-74","65–74"],["75+","75 以上"]];
+const AGE_50PLUS = ["50-64","65-74","75+","60-74"];
+const PLATFORM = [["none","沒裝"],["ios","iPhone"],["android","Android"]];
+/* Voucher rules (decided 2026-11-05). App on their own phone is required, plus LINE or IG.
+   LINE+IG+app → 100. LINE+app → 100 if 50+, else 50. IG+app → 50. Anything else → no voucher. */
+function voucherFor({ line, ig, platform, age }) {
+  const app = platform === "ios" || platform === "android";
+  if (!app || !(line || ig)) return { tier: "", why: "要裝 App，再加 LINE 或 IG，才有禮券" };
+  if (line && ig) return { tier: "100", why: "LINE + IG + App" };
+  if (line && AGE_50PLUS.includes(age)) return { tier: "100", why: "50 歲以上：LINE + App" };
+  if (line) return { tier: "50", why: age ? "LINE + App（50 歲以下）" : "LINE + App。50 歲以上可拿 100，請選年齡" };
+  return { tier: "50", why: "IG + App" };
+}
+function comboLabel(c) {
+  const parts = [c.line && "LINE", c.ig && "IG", c.platform === "ios" ? "iPhone" : c.platform === "android" ? "Android" : null].filter(Boolean);
+  return parts.length ? parts.join(" + ") : "都沒有";
+}
 const REASONS = ["沒時間","不需要","怕詐騙","手機容量不足","不太會用手機","已有類似 App","不想加 LINE","沒帶手機／沒網路","其他"];
 const DIFFS = ["字太小","看不懂掃描藥袋","不知道怎麼加藥","忘記 Apple ID／Google 密碼","下載太慢","手機太舊裝不了","擔心要付費","畫面看不懂","其他"];
 const ITAG = [["script","話術"],["ig","IG 內容"],["feature","App 功能想法"],["people","民眾的話"],["other","其他"]];
@@ -387,8 +417,9 @@ const STATUS = [["new","未聯絡"],["called","已打電話"],["ok","老闆同�
 const CHIPDEF = {
   who: WHO, age: AGE,
   outcome: [["signed","加入了"],["declined","拒絕"]],
-  tier: [["100","100 元"],["50","50 元"],["0","沒拿禮券"]],
-  checks: [["line","加 LINE"],["ig","追蹤 IG"],["app","裝 App"],["med","已加一筆藥"]],
+  social: [["line","加 LINE"],["ig","追蹤 IG"]],
+  platform: PLATFORM,
+  med: [["med","已在 App 加一筆藥"]],
   reasons: REASONS.map(r => [r, r]), diffs: DIFFS.map(r => [r, r]),
   traffic: [["1","1"],["2","2"],["3","3"],["4","4"],["5","5"]],
   owner: [["warm","很歡迎"],["ok","普通"],["cold","不太歡迎"]],
@@ -601,16 +632,24 @@ function syncOutcome() {
 }
 fC.addEventListener("chipchange", e => {
   if (e.detail.name === "outcome") syncOutcome();
-  if (e.detail.name === "tier") {
-    const t = getChips(fC, "tier"); const cur = getChips(fC, "checks");
-    const med = cur.includes("med") ? ["med"] : [];
-    if (t === "100") setChips(fC, "checks", ["line","ig","app"].concat(med));
-    if (t === "50") setChips(fC, "checks", ["line","app"].concat(med));
-  }
+  if (["social","platform","age"].includes(e.detail.name)) syncVoucher();
 });
+function formVoucher() {
+  const social = getChips(fC, "social");
+  return voucherFor({ line: social.includes("line"), ig: social.includes("ig"), platform: getChips(fC, "platform"), age: getChips(fC, "age") });
+}
+function syncVoucher() {
+  const plat = getChips(fC, "platform"), hasApp = plat === "ios" || plat === "android";
+  $("#c-med").hidden = !hasApp; if (!hasApp) setChips(fC, "med", "");
+  const v = formVoucher(), box = $("#c-voucher"), refused = $("#c-novoucher").checked;
+  box.className = "voucher-out " + (refused || !v.tier ? "vnone" : "v" + v.tier);
+  box.innerHTML = `<div class="why">禮券（自動計算）</div><div class="amt">${refused && v.tier ? "不發（對方不要）" : v.tier ? v.tier + " 元" : "不發禮券"}</div><div class="why">${esc(v.why)}</div>`;
+}
+$("#c-novoucher").addEventListener("change", syncVoucher);
 function resetContact() {
   editing.contact = null; pendingPhoto.contact = null;
-  ["who","age","outcome","tier","checks","reasons","diffs"].forEach(n => setChips(fC, n, ""));
+  ["who","age","outcome","social","platform","med","reasons","diffs"].forEach(n => setChips(fC, n, ""));
+  $("#c-novoucher").checked = false; syncVoucher();
   const now = new Date(); $("#c-date").value = today(); $("#c-time").value = pad(now.getHours()) + ":" + pad(now.getMinutes());
   $("#c-diffnote").value = ""; $("#c-note").value = ""; $("#c-consent").checked = false;
   $("#c-photo-wrap").hidden = true; $("#c-photo").value = ""; showPreview("contact", "");
@@ -623,7 +662,12 @@ fC.onsubmit = async e => {
   if (!loc) return toast("請選地點");
   if (!who) return toast("請選對象");
   if (!outcome) return toast("請選結果：加入了或拒絕");
-  const checks = outcome === "signed" ? getChips(fC, "checks") : [];
+  const signedUp = outcome === "signed";
+  const social = signedUp ? getChips(fC, "social") : [];
+  const platform = signedUp ? getChips(fC, "platform") : "";
+  if (signedUp && !platform) return toast("請選 App 裝在哪種手機（沒裝也要選）");
+  const v = signedUp ? formVoucher() : { tier: "" };
+  const refused = signedUp && $("#c-novoucher").checked;
   const btn = $("#c-save"); btn.disabled = true; btn.textContent = "儲存中…";
   try {
     const photo = $("#c-consent").checked ? await uploadPending("contact") : null;
@@ -634,8 +678,10 @@ fC.onsubmit = async e => {
     const data = {
       ts: tsVal, date: dStr,
       promoterId: prev ? prev.promoterId : me, locationId: loc, who, age: getChips(fC, "age"), outcome,
-      tier: outcome === "signed" ? (getChips(fC, "tier") || "0") : "",
-      line: checks.includes("line"), ig: checks.includes("ig"), app: checks.includes("app"), med: checks.includes("med"),
+      tier: signedUp ? (refused || !v.tier ? "0" : v.tier) : "",
+      eligibleTier: v.tier || "", voucherRefused: refused,
+      line: social.includes("line"), ig: social.includes("ig"), platform: platform === "none" ? "" : platform,
+      app: platform === "ios" || platform === "android", med: signedUp && (platform === "ios" || platform === "android") && getChips(fC, "med") === "med",
       reasons: outcome === "declined" ? getChips(fC, "reasons") : [],
       diffs: getChips(fC, "diffs"), diffNote: $("#c-diffnote").value.trim(),
       consent: $("#c-consent").checked, photo: photo || null, note: $("#c-note").value.trim(), updatedAt: Date.now()
@@ -654,7 +700,8 @@ function editContact(id) {
   $("#c-loc").value = c.locationId || "";
   const ct = new Date(c.ts || Date.now()); $("#c-date").value = c.date || ymd(ct); $("#c-time").value = pad(ct.getHours()) + ":" + pad(ct.getMinutes());
   setChips(fC, "who", c.who); setChips(fC, "age", c.age); setChips(fC, "outcome", c.outcome);
-  setChips(fC, "tier", c.tier); setChips(fC, "checks", ["line","ig","app","med"].filter(k => c[k]));
+  setChips(fC, "social", ["line","ig"].filter(k => c[k])); setChips(fC, "platform", c.platform || (c.outcome === "signed" && !c.app ? "none" : ""));
+  setChips(fC, "med", c.med ? "med" : ""); $("#c-novoucher").checked = !!c.voucherRefused; syncVoucher();
   setChips(fC, "reasons", c.reasons || []); setChips(fC, "diffs", c.diffs || []);
   $("#c-diffnote").value = c.diffNote || ""; $("#c-note").value = c.note || "";
   $("#c-consent").checked = !!c.consent; $("#c-photo-wrap").hidden = !c.consent;
@@ -667,8 +714,9 @@ function contactRow(c) {
   const tags = [];
   tags.push(`<span class="pill ${ok ? "" : "bad"}">${ok ? "加入" : "拒絕"}</span>`);
   if (ok && c.tier && c.tier !== "0") tags.push(`<span class="pill ${c.tier === "50" ? "amber" : ""}">禮券 ${esc(c.tier)}</span>`);
-  if (ok && c.tier === "0") tags.push(`<span class="pill plain">沒拿禮券</span>`);
-  if (ok) ["line","ig","app","med"].forEach(k => { if (c[k]) tags.push(`<span class="pill plain">${label(CHIPDEF.checks, k).replace("加 ","").replace("追蹤 ","").replace("裝 ","")}</span>`); });
+  if (ok && c.tier === "0") tags.push(`<span class="pill plain">${c.voucherRefused ? "不要禮券" : "沒有禮券"}</span>`);
+  if (ok) tags.push(`<span class="pill plain">${esc(comboLabel(c))}</span>`);
+  if (ok && c.med) tags.push(`<span class="pill plain">已加藥</span>`);
   (c.reasons || []).forEach(r => tags.push(`<span class="pill bad">${esc(r)}</span>`));
   (c.diffs || []).forEach(r => tags.push(`<span class="pill amber">困難：${esc(r)}</span>`));
   const t = new Date(c.ts || 0);
@@ -934,6 +982,10 @@ function bars(entries) {
   return entries.length ? entries.map(([k, v]) => `<div class="bar"><span>${esc(k)}</span><span class="v">${v}</span><span class="track"><span class="fill" style="display:block;width:${v / max * 100}%"></span></span></div>`).join("")
     : `<div class="empty-note">還沒有資料</div>`;
 }
+function comboCounts(rows) {
+  const m = {}; rows.forEach(c => { const k = comboLabel(c); m[k] = (m[k] || 0) + 1; });
+  return Object.entries(m).sort((a, b) => b[1] - a[1]);
+}
 function countTags(rows, field) {
   const m = {}; rows.forEach(r => (r[field] || []).forEach(t => m[t] = (m[t] || 0) + 1));
   return Object.entries(m).sort((a, b) => b[1] - a[1]);
@@ -1004,6 +1056,11 @@ function renderStats() {
       <div><b>${t0.length}</b><span>沒拿禮券</span></div>
     </div></div>
     <div class="card insight" style="margin-top:10px">${insights.join("")}</div>
+
+    <h2>組合統計</h2>
+    <div class="card">${bars(comboCounts(sg))}</div>
+    <div class="stat-card" style="margin-top:10px"><div class="t"><span>手機</span><span class="rank">裝了 App 的人</span></div>
+      <div class="kv"><div><b>${sg.filter(c => c.platform === "ios").length}</b><span>iPhone</span></div><div><b>${sg.filter(c => c.platform === "android").length}</b><span>Android</span></div></div></div>
 
     <h2>拒絕原因</h2>
     <div class="card">${bars(countTags(C.filter(c => c.outcome === "declined"), "reasons"))}</div>
