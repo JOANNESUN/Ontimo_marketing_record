@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ontimo 推廣紀錄</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
+<style>
+/* Layout: one phone-width column, fixed bottom tab bar; forms first, results below. */
+:root{
+  --bg:#f3f5f4; --surface:#ffffff; --ink:#18221f; --muted:#5f6d68; --line:#dbe2df;
+  --accent:#0d6b5f; --accent-ink:#ffffff; --accent-soft:#dcefeb;
+  --amber:#b7791f; --amber-soft:#f8ecd6;
+  --good:#1f7a3d; --bad:#b23a3a; --bad-soft:#f6e0e0;
+  --display:"Noto Serif TC", "Songti TC", serif;
+  --body:"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --r:12px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#101614; --surface:#18201d; --ink:#e7eeeb; --muted:#9aaba5; --line:#2b3632;
+    --accent:#3fb8a5; --accent-ink:#06201b; --accent-soft:#163a34;
+    --amber:#e2a54a; --amber-soft:#3a2c14;
+    --good:#5cc27d; --bad:#e37a7a; --bad-soft:#3d1f1f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#101614; --surface:#18201d; --ink:#e7eeeb; --muted:#9aaba5; --line:#2b3632;
+  --accent:#3fb8a5; --accent-ink:#06201b; --accent-soft:#163a34;
+  --amber:#e2a54a; --amber-soft:#3a2c14;
+  --good:#5cc27d; --bad:#e37a7a; --bad-soft:#3d1f1f;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding:0 0 calc(76px + env(safe-area-inset-bottom));}
+.wrap{max-width:560px;margin:0 auto;padding:0 16px}
+header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+  padding-top:env(safe-area-inset-top)}
+header.top .wrap{display:flex;align-items:center;gap:12px;min-height:56px}
+header h1{font-family:var(--display);font-size:19px;margin:0;line-height:1.2}
+header .sub{font-size:12px;color:var(--muted)}
+header .grow{flex:1;min-width:0}
+.me-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;
+  padding:8px 14px;font:inherit;font-size:14px;min-height:40px;white-space:nowrap}
+.me-btn.empty{border-color:var(--accent);color:var(--accent)}
+h2{font-size:17px;margin:24px 0 10px;text-wrap:balance}
+h3{font-size:15px;margin:18px 0 8px}
+.view{display:none;padding:14px 0 24px}
+.view.on{display:block}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.form{display:grid;gap:8px}
+.lbl{font-size:13px;font-weight:700;color:var(--muted);margin-top:8px}
+input[type=text],input[type=number],input[type=date],input[type=url],select,textarea{
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;min-height:46px}
+textarea{min-height:70px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible{
+  outline:3px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
+  padding:8px 14px;font:inherit;font-size:15px;min-height:42px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:500}
+.chips.big .chip{flex:1;min-height:52px;font-size:17px;font-weight:500}
+.chips[data-name="outcome"] .chip[data-v="declined"][aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:#fff}
+.chips[data-name="tier"] .chip[data-v="50"][aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#1b1306}
+.check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px}
+.check input{width:22px;height:22px;accent-color:var(--accent)}
+button.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;font:inherit;
+  font-weight:700;font-size:17px;min-height:52px;margin-top:10px;cursor:pointer}
+button.primary:disabled{opacity:.6}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:10px;
+  font:inherit;font-size:14px;min-height:38px;padding:6px 12px;cursor:pointer}
+button.danger{color:var(--bad);border-color:var(--bad-soft)}
+.edit-banner{background:var(--amber-soft);border-radius:10px;padding:8px 12px;display:flex;align-items:center;
+  justify-content:space-between;gap:8px;font-size:14px;font-weight:500}
+.edit-banner[hidden]{display:none}
+.preview img{max-width:100%;border-radius:10px;margin-top:6px;display:block}
+.today{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px;min-width:0}
+.tile .n{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.tile .k{font-size:12px;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.list{display:grid;gap:8px}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:6px}
+.row .meta{font-size:12px;color:var(--muted)}
+.row .acts{display:flex;gap:8px;justify-content:flex-end}
+.pill{display:inline-block;font-size:12px;border-radius:999px;padding:2px 9px;background:var(--accent-soft);color:var(--ink);
+  white-space:nowrap}
+.pill.bad{background:var(--bad-soft)}
+.pill.amber{background:var(--amber-soft)}
+.pill.plain{background:var(--bg);border:1px solid var(--line)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.thumb{max-width:100%;max-height:260px;border-radius:10px;object-fit:cover}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.empty-note{color:var(--muted);font-size:14px;padding:14px;text-align:center;border:1px dashed var(--line);border-radius:var(--r)}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal;min-width:110px}
+th{font-size:12px;color:var(--muted);font-weight:500}
+tr:last-child td{border-bottom:0}
+.bar{display:grid;grid-template-columns:minmax(90px,38%) 1fr 34px;gap:8px;align-items:center;font-size:14px;padding:4px 0}
+.bar .track{height:12px;background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar .fill{height:100%;background:var(--accent)}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums}
+.insight{display:grid;gap:8px}
+.insight p{margin:0;font-size:15px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.loc .top{display:flex;align-items:flex-start;gap:8px}
+.loc .name{font-weight:700;flex:1}
+.star{background:none;border:0;font-size:22px;line-height:1;min-width:40px;min-height:40px;cursor:pointer;color:var(--line)}
+.star.on{color:var(--amber)}
+.loc details summary{cursor:pointer;color:var(--accent);font-size:14px;min-height:36px;display:flex;align-items:center}
+.loc details[open] summary{margin-bottom:6px}
+.filters{display:grid;gap:8px;margin-bottom:12px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs .wrap{display:grid;grid-template-columns:repeat(5,1fr);padding:0 4px}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;
+  color:var(--muted);text-decoration:none;font-size:12px}
+nav.tabs a svg{width:22px;height:22px}
+nav.tabs a.on{color:var(--accent);font-weight:700}
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet-bg[hidden]{display:none}
+.sheet{background:var(--surface);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));
+  display:grid;gap:10px;max-height:85vh;overflow:auto}
+.sheet h2{margin:0}
+.sheet .opt{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;
+  padding:10px 12px;min-height:48px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer;width:100%;text-align:left}
+.sheet .opt.on{border-color:var(--accent);background:var(--accent-soft)}
+.inline{display:flex;gap:8px}
+.inline > *{flex:1}
+.inline > button{flex:0 0 auto}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:30;
+  background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;max-width:90vw;display:none}
+#banner{background:var(--amber-soft);font-size:13px;padding:8px 16px;text-align:center}
+#banner[hidden]{display:none}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="grow">
+      <h1>Ontimo 推廣紀錄</h1>
+      <div class="sub" id="weekLine">藥局門口推廣・兩人共用</div>
+    </div>
+    <button class="me-btn empty" id="meBtn" type="button">選擇身分</button>
+  </div>
+  <div id="banner" hidden></div>
+</header>
+
+<main class="wrap">
+
+<!-- 記錄 -->
+<section class="view" id="v-log">
+  <div class="today" id="todayBar"></div>
+  <form id="fContact" class="card form" novalidate>
+    <div class="edit-banner" hidden>正在編輯一筆紀錄 <button type="button" class="ghost" data-act="cancel-contact">取消編輯</button></div>
+    <div class="split">
+      <div><label class="lbl" for="c-date">日期</label><input type="date" id="c-date"></div>
+      <div><label class="lbl" for="c-time">時間</label><input type="time" id="c-time" style="width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:46px"></div>
+    </div>
+    <label class="lbl" for="c-loc">地點</label>
+    <select id="c-loc" class="loc-select"></select>
+    <a href="#places" class="small" data-act="go-add-loc" style="color:var(--accent)">地點不在清單裡？新增地點</a>
+    <div class="lbl">對象</div><div class="chips" data-name="who"></div>
+    <div class="lbl">年齡（大約）</div><div class="chips" data-name="age"></div>
+    <div class="lbl">結果</div><div class="chips big" data-name="outcome"></div>
+    <div data-show="signed" hidden>
+      <div class="lbl">禮券</div><div class="chips" data-name="tier"></div>
+      <div class="lbl">完成項目（看過手機畫面才勾）</div><div class="chips" data-name="checks" data-multi="1"></div>
+    </div>
+    <div data-show="declined" hidden>
+      <div class="lbl">拒絕原因（可複選）</div><div class="chips" data-name="reasons" data-multi="1"></div>
+    </div>
+    <div class="lbl">看到 App 時的困難（可複選，選填）</div><div class="chips" data-name="diffs" data-multi="1"></div>
+    <label class="lbl" for="c-diffnote">困難的細節（選填）</label>
+    <textarea id="c-diffnote" placeholder="例：阿伯找不到「新增藥物」按鈕，字太小看不清楚"></textarea>
+    <div class="lbl">照片（選填）</div>
+    <label class="check"><input type="checkbox" id="c-consent"> 對方同意拍照</label>
+    <div id="c-photo-wrap" hidden>
+      <input type="file" accept="image/*" id="c-photo">
+      <div class="preview" id="c-preview"></div>
+    </div>
+    <label class="lbl" for="c-note">備註（選填）</label>
+    <textarea id="c-note" placeholder="對方說了什麼、有什麼想法"></textarea>
+    <button class="primary" type="submit" id="c-save">儲存這筆</button>
+  </form>
+  <h2>最近紀錄</h2>
+  <div class="list" id="recentList"></div>
+</section>
+
+<!-- 每日 -->
+<section class="view" id="v-day">
+  <form id="fSession" class="card form" novalidate>
+    <div class="edit-banner" hidden>正在編輯一天的小結 <button type="button" class="ghost" data-act="cancel-session">取消編輯</button></div>
+    <p class="small muted" style="margin:0">每次推廣結束花一分鐘填。時數只用來算「每小時加入幾人」，好比較地點。</p>
+    <div class="split">
+      <div><label class="lbl" for="s-date">日期</label><input type="date" id="s-date"></div>
+      <div><label class="lbl" for="s-hours">時數</label><input type="number" id="s-hours" min="0" step="0.5" inputmode="decimal" placeholder="例：3"></div>
+    </div>
+    <label class="lbl" for="s-loc">地點</label>
+    <select id="s-loc" class="loc-select"></select>
+    <div class="lbl">人潮（1 少 – 5 多）</div><div class="chips" data-name="traffic"></div>
+    <div class="lbl">老闆／店員的反應</div><div class="chips" data-name="owner"></div>
+    <div class="lbl">人最多的時段（可複選）</div><div class="chips" data-name="slot" data-multi="1"></div>
+    <label class="lbl" for="s-note">這次的心得</label>
+    <textarea id="s-note" placeholder="哪種人最願意聽？哪句話最有用？下次要改什麼？"></textarea>
+    <button class="primary" type="submit">儲存今天</button>
+  </form>
+  <h2>每日小結</h2>
+  <div class="list" id="sessionList"></div>
+</section>
+
+<!-- 地點 -->
+<section class="view" id="v-places">
+  <details class="card" style="margin-bottom:12px" id="addLocBox">
+    <summary style="cursor:pointer;font-weight:700;color:var(--accent);min-height:32px;display:flex;align-items:center">＋ 新增地點</summary>
+    <form id="fLoc" class="form" novalidate style="margin-top:10px">
+      <div class="edit-banner" hidden>正在編輯地點資料 <button type="button" class="ghost" data-act="cancel-loc">取消編輯</button></div>
+      <label class="lbl" for="nl-name">名稱</label><input type="text" id="nl-name" placeholder="例：○○藥局">
+      <div class="split">
+        <div><label class="lbl" for="nl-district">行政區</label><input type="text" id="nl-district" placeholder="例：大安"></div>
+        <div><label class="lbl" for="nl-cat">類型</label><select id="nl-cat"></select></div>
+      </div>
+      <label class="lbl" for="nl-addr">地址</label><input type="text" id="nl-addr">
+      <label class="lbl" for="nl-phone">電話</label><input type="text" id="nl-phone" inputmode="tel">
+      <label class="lbl" for="nl-note">說明（選填）</label><input type="text" id="nl-note" placeholder="例：榮總旁、有慢箋客">
+      <label class="lbl" for="nl-week">排在第幾週（選填）</label><input type="number" id="nl-week" min="1" step="1" inputmode="numeric">
+      <button class="primary" type="submit" id="nl-save">加入清單</button>
+    </form>
+  </details>
+  <div class="filters">
+    <input type="text" id="l-search" placeholder="搜尋藥局名稱或區域" aria-label="搜尋地點">
+    <div class="chips" data-name="lcat" id="l-cat"></div>
+    <label class="check"><input type="checkbox" id="l-star"> 只看「值得再去」⭐</label>
+  </div>
+  <div class="list" id="locList"></div>
+</section>
+
+<!-- 靈感 -->
+<section class="view" id="v-ideas">
+  <form id="fIdea" class="card form" novalidate>
+    <div class="edit-banner" hidden>正在編輯 <button type="button" class="ghost" data-act="cancel-idea">取消編輯</button></div>
+    <label class="lbl" for="i-text">想法</label>
+    <textarea id="i-text" placeholder="有效的話術、民眾說的一句話、IG 可以拍什麼、App 可以改什麼"></textarea>
+    <label class="lbl" for="i-url">連結（IG Reels 或其他，選填）</label>
+    <input type="url" id="i-url" placeholder="https://www.instagram.com/reel/…" inputmode="url">
+    <div class="lbl">類別</div><div class="chips" data-name="itag"></div>
+    <div class="lbl">照片（選填，拍到人請先問過）</div>
+    <input type="file" accept="image/*" id="i-photo">
+    <div class="preview" id="i-preview"></div>
+    <button class="primary" type="submit">貼到靈感牆</button>
+  </form>
+  <div class="chips" data-name="ifilter" style="margin:16px 0 10px"></div>
+  <div class="list" id="ideaList"></div>
+</section>
+
+<!-- 數據 -->
+<section class="view" id="v-stats">
+  <div class="filters">
+    <select id="st-prom" aria-label="推廣員"></select>
+    <div class="chips" data-name="range"></div>
+  </div>
+  <div id="statsBody"></div>
+
+  <h2>禮券庫存</h2>
+  <div id="stockBox"></div>
+  <form id="fStock" class="card form" novalidate style="margin-top:8px">
+    <div class="lbl">買進禮券</div>
+    <div class="split">
+      <select id="sk-denom" aria-label="面額"><option value="100">100 元</option><option value="50">50 元</option></select>
+      <input type="number" id="sk-qty" min="1" step="1" inputmode="numeric" placeholder="張數" aria-label="張數">
+    </div>
+    <button class="primary" type="submit">加入庫存</button>
+  </form>
+
+  <h2>設定</h2>
+  <form id="fSettings" class="card form" novalidate>
+    <label class="lbl" for="set-start">第 1 週開始日</label><input type="date" id="set-start">
+    <label class="lbl" for="set-rate">時薪（算每位用戶成本用）</label><input type="number" id="set-rate" min="0" step="50" inputmode="numeric">
+    <button class="primary" type="submit">儲存設定</button>
+  </form>
+</section>
+</main>
+
+<nav class="tabs" aria-label="主選單">
+  <div class="wrap">
+    <a href="#log" data-tab="log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>記錄</a>
+    <a href="#day" data-tab="day"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>每日</a>
+    <a href="#places" data-tab="places"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>地點</a>
+    <a href="#ideas" data-tab="ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>靈感</a>
+    <a href="#stats" data-tab="stats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>數據</a>
+  </div>
+</nav>
+
+<div class="sheet-bg" id="meSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="meTitle">
+    <h2 id="meTitle">你是誰？</h2>
+    <p class="small muted" style="margin:0">選你的名字，之後新增的紀錄都會記在你名下。這台手機會記住。</p>
+    <div id="meList" class="list"></div>
+    <form id="fProm" class="inline" novalidate>
+      <input type="text" id="p-name" placeholder="新增推廣員名字" aria-label="新增推廣員名字">
+      <button class="ghost" type="submit">新增</button>
+    </form>
+    <button class="ghost" type="button" data-act="close-sheet">關閉</button>
+  </div>
+</div>
+
+<div class="sheet-bg" id="confirmSheet" hidden>
+  <div class="sheet" role="dialog" aria-modal="true">
+    <h2 id="confirmMsg">確定刪除？</h2>
+    <div class="split">
+      <button class="ghost" type="button" id="confirmNo">取消</button>
+      <button class="primary" type="button" id="confirmYes" style="margin:0;background:var(--bad);color:#fff">刪除</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet-bg" id="loginSheet" hidden>
+  <form class="sheet" id="fLogin" novalidate>
+    <h2>輸入團隊密碼</h2>
+    <p class="small muted" style="margin:0">密碼請問 Joanne。這支手機會記住 180 天。</p>
+    <input type="password" id="login-pass" autocomplete="current-password" aria-label="團隊密碼">
+    <button class="primary" type="submit">進入</button>
+  </form>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+const pad = n => String(n).padStart(2, "0");
+const ymd = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+const today = () => ymd(new Date());
+const parse = s => new Date(s + "T00:00:00");
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate() + n); return ymd(d); };
+const mondayOf = s => { const d = parse(s); const wd = (d.getDay() + 6) % 7; d.setDate(d.getDate() - wd); return ymd(d); };
+const pct = (a, b) => b ? Math.round(a / b * 100) + "%" : "–";
+const sum = a => a.reduce((x, y) => x + (Number(y) || 0), 0);
+const fmtMoney = n => "NT$" + Math.round(n).toLocaleString("en-US");
+
+const WHO = [["senior","長輩（自己領藥）"],["child","幫爸媽領藥的子女"],["self","中年自己用"],["carer","看護／照顧者"],["other","其他"]];
+const AGE = [["<30","30 以下"],["30-44","30–44"],["45-59","45–59"],["60-74","60–74"],["75+","75 以上"]];
+const REASONS = ["沒時間","不需要","怕詐騙","手機容量不足","不太會用手機","已有類似 App","不想加 LINE","沒帶手機／沒網路","其他"];
+const DIFFS = ["字太小","看不懂掃描藥袋","不知道怎麼加藥","忘記 Apple ID／Google 密碼","下載太慢","手機太舊裝不了","擔心要付費","畫面看不懂","其他"];
+const ITAG = [["script","話術"],["ig","IG 內容"],["feature","App 功能想法"],["people","民眾的話"],["other","其他"]];
+const CATS = [["hosp","大醫院周邊藥局"],["comm","社區藥局"],["senior","老人／樂齡中心"],["indo","印尼社群"],["other","其他"]];
+const STATUS = [["new","未聯絡"],["called","已打電話"],["ok","老闆同意"],["visited","已去過"],["no","婉拒"]];
+const CHIPDEF = {
+  who: WHO, age: AGE,
+  outcome: [["signed","加入了"],["declined","拒絕"]],
+  tier: [["100","100 元"],["50","50 元"],["0","沒拿禮券"]],
+  checks: [["line","加 LINE"],["ig","追蹤 IG"],["app","裝 App"],["med","已加一筆藥"]],
+  reasons: REASONS.map(r => [r, r]), diffs: DIFFS.map(r => [r, r]),
+  traffic: [["1","1"],["2","2"],["3","3"],["4","4"],["5","5"]],
+  owner: [["warm","很歡迎"],["ok","普通"],["cold","不太歡迎"]],
+  slot: [["am","上午"],["noon","中午"],["pm","下午"]],
+  itag: ITAG, ifilter: [["all","全部"]].concat(ITAG),
+  lcat: [["all","全部"]].concat(CATS),
+  range: [["all","全部"],["today","今天"],["week","本週"],["last","上週"]],
+  lstatus: STATUS
+};
+const label = (list, v) => (list.find(x => x[0] === v) || [v, v])[1];
+
+const S = { promoters: [], locations: [], contacts: [], sessions: [], inspo: [], stock: [], settings: {} };
+/* ---------- API client ---------- */
+async function api(method, url, body, rawType) {
+  const opt = { method, credentials: "same-origin", headers: {} };
+  if (body !== undefined) {
+    if (rawType) { opt.body = body; opt.headers["content-type"] = rawType; }
+    else { opt.body = JSON.stringify(body); opt.headers["content-type"] = "application/json"; }
+  }
+  const res = await fetch(url, opt);
+  if (res.status === 401) { showLogin(); const e = new Error("請先輸入團隊密碼"); e.status = 401; throw e; }
+  const out = await res.json().catch(() => ({}));
+  if (!res.ok) { const e = new Error(out.error || ("HTTP " + res.status)); e.status = res.status; throw e; }
+  return out;
+}
+// Same shape the page used before: db.collection(c).add / .doc(id).set|update|delete, db.doc("c/id")
+const db = (() => {
+  const coll = col => ({
+    async add(data) { const r = await api("POST", "/api/docs/" + col, data); DATA[col].set(r.id, data); afterWrite(r.updated_at); return { id: r.id }; },
+    doc(id) {
+      return {
+        async set(data) { const r = await api("PUT", `/api/docs/${col}/${id}`, data); DATA[col].set(id, data); afterWrite(r.updated_at); },
+        async update(patch) {
+          const merged = Object.assign({}, DATA[col].get(id) || {}, patch);
+          const r = await api("PUT", `/api/docs/${col}/${id}`, merged); DATA[col].set(id, merged); afterWrite(r.updated_at);
+        },
+        async delete() { const r = await api("DELETE", `/api/docs/${col}/${id}`); DATA[col].delete(id); afterWrite(r.updated_at); }
+      };
+    }
+  });
+  return { collection: coll, doc: path => { const [c, id] = path.split("/"); return coll(c).doc(id); } };
+})();
+function afterWrite() { applyRows([]); queueRender(); setTimeout(sync, 300); }
+async function uploadPhoto(blob) { return api("POST", "/api/photos", blob, blob.type || "image/jpeg"); }
+
+/* ---------- Login ---------- */
+function showLogin() { $("#loginSheet").hidden = false; setTimeout(() => $("#login-pass").focus(), 50); }
+let me = lsGet("ontimo_me") || "";
+let editing = { contact: null, session: null, idea: null, loc: null };
+let pendingPhoto = { contact: null, idea: null };   // {file} new, or {keep:{id,url}} existing, or null
+let gotData = false, askedMe = false;
+
+/* ---------- UI helpers ---------- */
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.style.display = "block";
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.style.display = "none", 2600);
+}
+function banner(msg) { const b = $("#banner"); if (msg) { b.textContent = msg; b.hidden = false; } else b.hidden = true; }
+function confirmBox(msg) {
+  return new Promise(res => {
+    $("#confirmMsg").textContent = msg; const sh = $("#confirmSheet"); sh.hidden = false;
+    const done = v => { sh.hidden = true; $("#confirmYes").onclick = $("#confirmNo").onclick = null; res(v); };
+    $("#confirmYes").onclick = () => done(true); $("#confirmNo").onclick = () => done(false);
+  });
+}
+function buildChips() {
+  $$(".chips[data-name]").forEach(g => {
+    const def = CHIPDEF[g.dataset.name]; if (!def) return;
+    g.innerHTML = def.map(([v, l]) => `<button type="button" class="chip" data-v="${esc(v)}" aria-pressed="false">${esc(l)}</button>`).join("");
+  });
+}
+function getChips(scope, name) {
+  const g = $(`.chips[data-name="${name}"]`, scope);
+  const on = $$(".chip[aria-pressed=true]", g).map(b => b.dataset.v);
+  return g.dataset.multi ? on : (on[0] || "");
+}
+function setChips(scope, name, val) {
+  const g = $(`.chips[data-name="${name}"]`, scope);
+  const vals = Array.isArray(val) ? val : (val === "" || val == null ? [] : [String(val)]);
+  $$(".chip", g).forEach(b => b.setAttribute("aria-pressed", vals.includes(b.dataset.v) ? "true" : "false"));
+}
+document.addEventListener("click", e => {
+  const chip = e.target.closest(".chip"); if (!chip) return;
+  const g = chip.parentElement; const on = chip.getAttribute("aria-pressed") === "true";
+  if (g.dataset.multi) chip.setAttribute("aria-pressed", on ? "false" : "true");
+  else {
+    const keepOne = ["ifilter","lcat","range"].includes(g.dataset.name);
+    $$(".chip", g).forEach(b => b.setAttribute("aria-pressed", "false"));
+    if (!on || keepOne) chip.setAttribute("aria-pressed", "true");
+  }
+  g.dispatchEvent(new CustomEvent("chipchange", { bubbles: true, detail: { name: g.dataset.name } }));
+});
+
+const promName = id => (S.promoters.find(p => p.id === id) || {}).name || "（未知）";
+const locById = id => S.locations.find(l => l.id === id);
+const locName = id => (locById(id) || {}).name || "（已刪除的地點）";
+const WD = ["日","一","二","三","四","五","六"];
+const dateLabel = s => { if (!s) return ""; const d = parse(s); const t = today();
+  const pre = s === t ? "今天・" : s === addDays(t, -1) ? "昨天・" : "";
+  return `${pre}${d.getMonth() + 1}/${d.getDate()}（${WD[d.getDay()]}）`; };
+const imgSrc = p =>p ? (p.url || ("/api/photos/" + p.id)) : "";
+
+function weekNo(dateStr) {
+  const st = S.settings.startDate; if (!st) return null;
+  const diff = Math.floor((parse(mondayOf(dateStr)) - parse(mondayOf(st))) / 864e5 / 7);
+  return diff + 1;
+}
+
+/* ---------- Header / identity ---------- */
+function renderHeader() {
+  const b = $("#meBtn");
+  const p = S.promoters.find(x => x.id === me);
+  if (p) { b.textContent = p.name; b.classList.remove("empty"); } else { b.textContent = "選擇身分"; b.classList.add("empty"); }
+  const wn = weekNo(today());
+  const line = $("#weekLine");
+  if (wn && wn >= 1) {
+    const locs = S.locations.filter(l => Number(l.week) === wn).map(l => l.name);
+    line.textContent = `第 ${wn} 週` + (locs.length ? "・" + locs.slice(0, 3).join("、") + (locs.length > 3 ? "…" : "") : "");
+  } else if (wn !== null && wn < 1) line.textContent = `第 1 週從 ${S.settings.startDate} 開始`;
+  else line.textContent = "藥局門口推廣・共用紀錄";
+}
+function renderMeSheet() {
+  $("#meList").innerHTML = S.promoters.length ? S.promoters.map(p =>
+    `<button type="button" class="opt ${p.id === me ? "on" : ""}" data-me="${esc(p.id)}"><span>${esc(p.name)}</span><span class="small muted">${p.id === me ? "目前" : "選擇"}</span></button>`
+  ).join("") : `<div class="empty-note">還沒有推廣員，先在下面新增名字。</div>`;
+}
+$("#meBtn").onclick = () => { renderMeSheet(); $("#meSheet").hidden = false; };
+document.addEventListener("click", e => {
+  const o = e.target.closest("[data-me]");
+  if (o) { me = o.dataset.me; lsSet("ontimo_me", me); $("#meSheet").hidden = true; renderAll(); toast("已切換為 " + promName(me)); }
+  if (e.target.closest("[data-act=close-sheet]")) $("#meSheet").hidden = true;
+});
+$("#fProm").onsubmit = async e => {
+  e.preventDefault(); const name = $("#p-name").value.trim(); if (!name) return;
+  try {
+    const ref = await db.collection("promoters").add({ name, createdAt: Date.now() });
+    me = ref.id; lsSet("ontimo_me", me); $("#p-name").value = ""; $("#meSheet").hidden = true; toast("歡迎，" + name);
+  } catch (err) { toast("新增失敗：" + (err.code || err.message)); }
+};
+function needMe() { if (!S.promoters.find(p => p.id === me)) { renderMeSheet(); $("#meSheet").hidden = false; toast("請先選你的名字"); return true; } return false; }
+
+/* ---------- Location selects ---------- */
+function locOptionsHTML() {
+  const wn = weekNo(today());
+  const groups = [];
+  if (wn) { const w = S.locations.filter(l => Number(l.week) === wn); if (w.length) groups.push([`本週（第 ${wn} 週）`, w]); }
+  const starred = S.locations.filter(l => l.star);
+  if (starred.length) groups.push(["⭐ 值得再去", starred]);
+  CATS.forEach(([c, cl]) => {
+    const ls = S.locations.filter(l => (l.cat || "other") === c);
+    if (ls.length) groups.push([cl, ls]);
+  });
+  return `<option value="">選地點…</option>` + groups.map(([g, ls]) =>
+    `<optgroup label="${esc(g)}">` + ls.map(l => `<option value="${esc(l.id)}">${esc(l.name)}${l.district ? "（" + esc(l.district) + "）" : ""}</option>`).join("") + `</optgroup>`
+  ).join("");
+}
+function refreshLocSelects() {
+  const html = locOptionsHTML();
+  $$(".loc-select").forEach(sel => {
+    const v = sel.value || lsGet("ontimo_lastloc") || "";
+    sel.innerHTML = html;
+    if (v && S.locations.find(l => l.id === v)) sel.value = v;
+  });
+}
+
+/* ---------- Photos ---------- */
+async function compress(file) {
+  try {
+    const bmp = await createImageBitmap(file);
+    const max = 1600, r = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const c = document.createElement("canvas"); c.width = Math.round(bmp.width * r); c.height = Math.round(bmp.height * r);
+    c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+    return await new Promise(res => c.toBlob(b => res(b || file), "image/jpeg", 0.82));
+  } catch (e) { return file; }
+}
+async function uploadPending(kind) {
+  const p = pendingPhoto[kind];
+  if (!p) return null;
+  if (p.keep) return p.keep;
+  const blob = await compress(p.file);
+  const a = await uploadPhoto(blob);
+  return { id: a.id, url: a.url || "" };
+}
+function showPreview(kind, src) {
+  const box = kind === "contact" ? $("#c-preview") : $("#i-preview");
+  box.innerHTML = src ? `<img src="${esc(src)}" alt="預覽照片"><button type="button" class="ghost danger" data-act="rm-photo-${kind}" style="margin-top:6px">移除照片</button>` : "";
+}
+function bindPhoto(input, kind) {
+  input.addEventListener("change", () => {
+    const f = input.files && input.files[0];
+    if (!f) return;
+    pendingPhoto[kind] = { file: f };
+    showPreview(kind, URL.createObjectURL(f));
+  });
+}
+bindPhoto($("#c-photo"), "contact"); bindPhoto($("#i-photo"), "idea");
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-act^=rm-photo-]"); if (!b) return;
+  const kind = b.dataset.act.replace("rm-photo-", "");
+  pendingPhoto[kind] = null; showPreview(kind, "");
+  (kind === "contact" ? $("#c-photo") : $("#i-photo")).value = "";
+});
+$("#c-consent").addEventListener("change", e => { $("#c-photo-wrap").hidden = !e.target.checked; if (!e.target.checked) { pendingPhoto.contact = null; showPreview("contact", ""); $("#c-photo").value = ""; } });
+
+/* ---------- Contact form ---------- */
+const fC = $("#fContact");
+function syncOutcome() {
+  const o = getChips(fC, "outcome");
+  $$("[data-show]", fC).forEach(el => el.hidden = el.dataset.show !== o);
+}
+fC.addEventListener("chipchange", e => {
+  if (e.detail.name === "outcome") syncOutcome();
+  if (e.detail.name === "tier") {
+    const t = getChips(fC, "tier"); const cur = getChips(fC, "checks");
+    const med = cur.includes("med") ? ["med"] : [];
+    if (t === "100") setChips(fC, "checks", ["line","ig","app"].concat(med));
+    if (t === "50") setChips(fC, "checks", ["line","app"].concat(med));
+  }
+});
+function resetContact() {
+  editing.contact = null; pendingPhoto.contact = null;
+  ["who","age","outcome","tier","checks","reasons","diffs"].forEach(n => setChips(fC, n, ""));
+  const now = new Date(); $("#c-date").value = today(); $("#c-time").value = pad(now.getHours()) + ":" + pad(now.getMinutes());
+  $("#c-diffnote").value = ""; $("#c-note").value = ""; $("#c-consent").checked = false;
+  $("#c-photo-wrap").hidden = true; $("#c-photo").value = ""; showPreview("contact", "");
+  $(".edit-banner", fC).hidden = true; $("#c-save").textContent = "儲存這筆"; syncOutcome();
+}
+fC.onsubmit = async e => {
+  e.preventDefault();
+  if (needMe()) return;
+  const loc = $("#c-loc").value, who = getChips(fC, "who"), outcome = getChips(fC, "outcome");
+  if (!loc) return toast("請選地點");
+  if (!who) return toast("請選對象");
+  if (!outcome) return toast("請選結果：加入了或拒絕");
+  const checks = outcome === "signed" ? getChips(fC, "checks") : [];
+  const btn = $("#c-save"); btn.disabled = true; btn.textContent = "儲存中…";
+  try {
+    const photo = $("#c-consent").checked ? await uploadPending("contact") : null;
+    const prev = editing.contact ? S.contacts.find(c => c.id === editing.contact) : null;
+    const dStr = $("#c-date").value || today();
+    const tm = $("#c-time").value || "12:00";
+    const tsVal = new Date(dStr + "T" + tm + ":00").getTime() || Date.now();
+    const data = {
+      ts: tsVal, date: dStr,
+      promoterId: prev ? prev.promoterId : me, locationId: loc, who, age: getChips(fC, "age"), outcome,
+      tier: outcome === "signed" ? (getChips(fC, "tier") || "0") : "",
+      line: checks.includes("line"), ig: checks.includes("ig"), app: checks.includes("app"), med: checks.includes("med"),
+      reasons: outcome === "declined" ? getChips(fC, "reasons") : [],
+      diffs: getChips(fC, "diffs"), diffNote: $("#c-diffnote").value.trim(),
+      consent: $("#c-consent").checked, photo: photo || null, note: $("#c-note").value.trim(), updatedAt: Date.now()
+    };
+    if (editing.contact) await db.collection("contacts").doc(editing.contact).set(data);
+    else await db.collection("contacts").add(data);
+    lsSet("ontimo_lastloc", loc);
+    toast(editing.contact ? "已更新" : "已儲存 ✓");
+    resetContact(); window.scrollTo({ top: 0 });
+  } catch (err) { toast("儲存失敗：" + (err.message || err.code)); }
+  btn.disabled = false; if (!editing.contact) btn.textContent = "儲存這筆";
+};
+function editContact(id) {
+  const c = S.contacts.find(x => x.id === id); if (!c) return;
+  resetContact(); editing.contact = id;
+  $("#c-loc").value = c.locationId || "";
+  const ct = new Date(c.ts || Date.now()); $("#c-date").value = c.date || ymd(ct); $("#c-time").value = pad(ct.getHours()) + ":" + pad(ct.getMinutes());
+  setChips(fC, "who", c.who); setChips(fC, "age", c.age); setChips(fC, "outcome", c.outcome);
+  setChips(fC, "tier", c.tier); setChips(fC, "checks", ["line","ig","app","med"].filter(k => c[k]));
+  setChips(fC, "reasons", c.reasons || []); setChips(fC, "diffs", c.diffs || []);
+  $("#c-diffnote").value = c.diffNote || ""; $("#c-note").value = c.note || "";
+  $("#c-consent").checked = !!c.consent; $("#c-photo-wrap").hidden = !c.consent;
+  if (c.photo) { pendingPhoto.contact = { keep: c.photo }; showPreview("contact", imgSrc(c.photo)); }
+  $(".edit-banner", fC).hidden = false; $("#c-save").textContent = "更新這筆"; syncOutcome();
+  location.hash = "log"; window.scrollTo({ top: 0 });
+}
+function contactRow(c) {
+  const ok = c.outcome === "signed";
+  const tags = [];
+  tags.push(`<span class="pill ${ok ? "" : "bad"}">${ok ? "加入" : "拒絕"}</span>`);
+  if (ok && c.tier && c.tier !== "0") tags.push(`<span class="pill ${c.tier === "50" ? "amber" : ""}">禮券 ${esc(c.tier)}</span>`);
+  if (ok && c.tier === "0") tags.push(`<span class="pill plain">沒拿禮券</span>`);
+  if (ok) ["line","ig","app","med"].forEach(k => { if (c[k]) tags.push(`<span class="pill plain">${label(CHIPDEF.checks, k).replace("加 ","").replace("追蹤 ","").replace("裝 ","")}</span>`); });
+  (c.reasons || []).forEach(r => tags.push(`<span class="pill bad">${esc(r)}</span>`));
+  (c.diffs || []).forEach(r => tags.push(`<span class="pill amber">困難：${esc(r)}</span>`));
+  const t = new Date(c.ts || 0);
+  return `<div class="row">
+    <div><b>${esc(label(WHO, c.who))}</b>${c.age ? `<span class="muted small">・${esc(label(AGE, c.age))}</span>` : ""}</div>
+    <div class="meta">${esc(c.date || "")} ${pad(t.getHours())}:${pad(t.getMinutes())}・${esc(locName(c.locationId))}・${esc(promName(c.promoterId))}</div>
+    <div class="tags">${tags.join("")}</div>
+    ${c.diffNote ? `<div class="small">${esc(c.diffNote)}</div>` : ""}
+    ${c.note ? `<div class="small muted">${esc(c.note)}</div>` : ""}
+    ${c.photo ? `<img class="thumb" loading="lazy" src="${esc(imgSrc(c.photo))}" alt="現場照片">` : ""}
+    <div class="acts"><button class="ghost" type="button" data-edit-contact="${esc(c.id)}">編輯</button><button class="ghost danger" type="button" data-del="contacts" data-id="${esc(c.id)}">刪除</button></div>
+  </div>`;
+}
+function renderLog() {
+  const t = today();
+  const mine = S.contacts.filter(c => c.date === t && c.promoterId === me);
+  const signed = mine.filter(c => c.outcome === "signed");
+  $("#todayBar").innerHTML = [
+    ["今天接觸", mine.length], ["加入", signed.length], ["已加藥", signed.filter(c => c.med).length],
+    ["禮券 100/50", signed.filter(c => c.tier === "100").length + "/" + signed.filter(c => c.tier === "50").length]
+  ].map(([k, n]) => `<div class="tile"><div class="n">${n}</div><div class="k">${k}</div></div>`).join("");
+  const recent = S.contacts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.ts || 0) - (a.ts || 0)).slice(0, 30);
+  let html = "", lastD = null;
+  recent.forEach(c => {
+    if (c.date !== lastD) {
+      lastD = c.date;
+      const n = S.contacts.filter(x => x.date === c.date);
+      html += `<h3 style="margin:14px 0 2px">${esc(dateLabel(c.date))}<span class="small muted" style="font-weight:400">　接觸 ${n.length}・加入 ${n.filter(x => x.outcome === "signed").length}</span></h3>`;
+    }
+    html += contactRow(c);
+  });
+  $("#recentList").innerHTML = recent.length ? html : `<div class="empty-note">還沒有紀錄。在上面記下第一位民眾。</div>`;
+}
+
+/* ---------- Sessions ---------- */
+const fS = $("#fSession");
+function resetSession() {
+  editing.session = null; $("#s-date").value = today(); $("#s-hours").value = ""; $("#s-note").value = "";
+  ["traffic","owner","slot"].forEach(n => setChips(fS, n, "")); $(".edit-banner", fS).hidden = true;
+}
+fS.onsubmit = async e => {
+  e.preventDefault(); if (needMe()) return;
+  const loc = $("#s-loc").value; if (!loc) return toast("請選地點");
+  const hours = parseFloat($("#s-hours").value); if (!(hours > 0)) return toast("請填時數");
+  const prev = editing.session ? S.sessions.find(s => s.id === editing.session) : null;
+  const data = { date: $("#s-date").value || today(), hours, locationId: loc, promoterId: prev ? prev.promoterId : me,
+    traffic: getChips(fS, "traffic"), owner: getChips(fS, "owner"), slot: getChips(fS, "slot"), note: $("#s-note").value.trim(),
+    ts: prev ? prev.ts : Date.now(), updatedAt: Date.now() };
+  try {
+    if (editing.session) await db.collection("sessions").doc(editing.session).set(data);
+    else await db.collection("sessions").add(data);
+    toast(editing.session ? "已更新" : "已儲存 ✓"); resetSession();
+  } catch (err) { toast("儲存失敗：" + (err.code || err.message)); }
+};
+function editSession(id) {
+  const s = S.sessions.find(x => x.id === id); if (!s) return;
+  editing.session = id; $("#s-date").value = s.date; $("#s-hours").value = s.hours; $("#s-loc").value = s.locationId;
+  setChips(fS, "traffic", s.traffic); setChips(fS, "owner", s.owner); setChips(fS, "slot", s.slot || []);
+  $("#s-note").value = s.note || ""; $(".edit-banner", fS).hidden = false; location.hash = "day"; window.scrollTo({ top: 0 });
+}
+function renderSessions() {
+  const list = S.sessions.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.ts || 0) - (a.ts || 0));
+  $("#sessionList").innerHTML = list.length ? list.map(s => {
+    const C = S.contacts.filter(c => c.date === s.date && c.locationId === s.locationId && c.promoterId === s.promoterId);
+    const sg = C.filter(c => c.outcome === "signed").length;
+    return `<div class="row">
+      <div><b>${esc(locName(s.locationId))}</b></div>
+      <div class="meta">${esc(dateLabel(s.date))}・${esc(promName(s.promoterId))}・${esc(s.hours)} 小時</div>
+      <div class="tags">
+        <span class="pill">接觸 ${C.length}・加入 ${sg}${s.hours ? "・每小時 " + (sg / s.hours).toFixed(1) : ""}</span>
+        ${s.traffic ? `<span class="pill plain">人潮 ${esc(s.traffic)}/5</span>` : ""}
+        ${s.owner ? `<span class="pill ${s.owner === "cold" ? "bad" : "plain"}">店家：${esc(label(CHIPDEF.owner, s.owner))}</span>` : ""}
+        ${(s.slot || []).map(x => `<span class="pill plain">${esc(label(CHIPDEF.slot, x))}人多</span>`).join("")}
+      </div>
+      ${s.note ? `<div class="small">${esc(s.note)}</div>` : ""}
+      <div class="acts"><button class="ghost" type="button" data-edit-session="${esc(s.id)}">編輯</button><button class="ghost danger" type="button" data-del="sessions" data-id="${esc(s.id)}">刪除</button></div>
+    </div>`;
+  }).join("") : `<div class="empty-note">還沒有每日小結。</div>`;
+}
+
+/* ---------- Locations ---------- */
+function locStats(id) {
+  const C = S.contacts.filter(c => c.locationId === id);
+  const sg = C.filter(c => c.outcome === "signed");
+  const hrs = sum(S.sessions.filter(s => s.locationId === id).map(s => s.hours));
+  const dates = C.map(c => c.date).concat(S.sessions.filter(s => s.locationId === id).map(s => s.date)).filter(Boolean).sort();
+  return { n: C.length, sg: sg.length, med: sg.filter(c => c.med).length, hrs, rate: hrs ? sg.length / hrs : null,
+    last: dates[dates.length - 1] || "", days: new Set(dates).size };
+}
+function renderLocs() {
+  const open = new Set($$("#locList details[open]").map(d => d.closest(".loc").dataset.id));
+  const focus = document.activeElement && document.activeElement.closest && document.activeElement.closest("#locList .loc");
+  if (focus && document.activeElement.tagName === "TEXTAREA") { renderLocs._pending = true; return; }
+  const q = $("#l-search").value.trim(), cat = getChips($("#v-places"), "lcat") || "all", onlyStar = $("#l-star").checked;
+  const wn = weekNo(today());
+  let ls = S.locations.filter(l => (cat === "all" || (l.cat || "other") === cat) && (!onlyStar || l.star) &&
+    (!q || (l.name + (l.district || "") + (l.group || "") + (l.address || "")).includes(q)));
+  ls = ls.map(l => ({ l, st: locStats(l.id) })).sort((a, b) =>
+    ((Number(b.l.week) === wn) - (Number(a.l.week) === wn)) || ((b.st.rate ?? -1) - (a.st.rate ?? -1)) || (b.st.n - a.st.n) ||
+    ((Number(a.l.week) || 99) - (Number(b.l.week) || 99)));
+  $("#locList").innerHTML = ls.length ? ls.map(({ l, st }) => {
+    const stl = label(STATUS, l.status || "new");
+    return `<div class="card loc" data-id="${esc(l.id)}">
+      <div class="top">
+        <div class="name">${esc(l.name)}<div class="small muted" style="font-weight:400">${esc([l.district, l.group, l.week ? "第 " + l.week + " 週" : "", l.chain ? "連鎖" : ""].filter(Boolean).join("・"))}</div></div>
+        <span class="pill ${l.status === "no" ? "bad" : l.status === "ok" || l.status === "visited" ? "" : "plain"}">${esc(stl)}</span>
+        <button type="button" class="star ${l.star ? "on" : ""}" data-star="${esc(l.id)}" aria-label="值得再去" aria-pressed="${l.star ? "true" : "false"}">★</button>
+      </div>
+      <div class="small" style="margin-top:4px">${st.n ? `接觸 ${st.n}・加入 ${st.sg}（${pct(st.sg, st.n)}）・加藥 ${st.med}${st.rate != null ? "・每小時 " + st.rate.toFixed(1) + " 人" : ""}` : `<span class="muted">還沒去過</span>`}</div>
+      ${st.last ? `<div class="small muted">上次去：${esc(dateLabel(st.last))}・共去過 ${st.days} 天</div>` : ""}
+      ${l.createdBy ? `<div class="small muted">${esc(promName(l.createdBy))} 新增於 ${esc(dateLabel(ymd(new Date(l.createdAt || 0))))}</div>` : ""}
+      <details ${open.has(l.id) ? "open" : ""}>
+        <summary>詳情與備註</summary>
+        <div class="form">
+          ${l.address ? `<div class="small">${esc(l.address)}</div>` : ""}
+          ${l.phone ? `<div class="small"><a href="tel:${esc(l.phone.replace(/[^0-9+]/g, ""))}">${esc(l.phone)}</a></div>` : ""}
+          ${l.note ? `<div class="small muted">${esc(l.note)}</div>` : ""}
+          <div class="lbl">狀態</div>
+          <div class="chips" data-loc-status="${esc(l.id)}">${STATUS.map(([v, t]) => `<button type="button" class="chip" data-v="${v}" aria-pressed="${(l.status || "new") === v}">${t}</button>`).join("")}</div>
+          <label class="lbl" for="memo-${esc(l.id)}">我們的備註</label>
+          <textarea id="memo-${esc(l.id)}" data-memo="${esc(l.id)}" placeholder="老闆姓名、可以站哪裡、幾點人多">${esc(l.memo || "")}</textarea>
+          <button type="button" class="ghost" data-save-memo="${esc(l.id)}">儲存備註</button>
+          <div class="acts" style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+            <button type="button" class="ghost" data-edit-loc="${esc(l.id)}">編輯地點資料</button>
+            <button type="button" class="ghost danger" data-del="locations" data-id="${esc(l.id)}">刪除地點</button>
+          </div>
+        </div>
+      </details>
+    </div>`;
+  }).join("") : `<div class="empty-note">沒有符合的地點。</div>`;
+}
+document.addEventListener("focusout", e => { if (e.target.matches && e.target.matches("[data-memo]") && renderLocs._pending) { renderLocs._pending = false; setTimeout(renderLocs, 50); } });
+async function updateLoc(id, patch) {
+  try { await db.collection("locations").doc(id).update(Object.assign({ updatedAt: Date.now() }, patch)); }
+  catch (err) { toast("更新失敗：" + (err.code || err.message)); }
+}
+document.addEventListener("click", async e => {
+  const st = e.target.closest("[data-loc-status] .chip");
+  if (st) { const id = st.parentElement.dataset.locStatus; await updateLoc(id, { status: st.dataset.v }); return; }
+  const star = e.target.closest("[data-star]");
+  if (star) { const l = locById(star.dataset.star); if (l) await updateLoc(l.id, { star: !l.star }); return; }
+  const sm = e.target.closest("[data-save-memo]");
+  if (sm) { const id = sm.dataset.saveMemo; await updateLoc(id, { memo: $(`[data-memo="${id}"]`).value.trim() }); toast("備註已儲存"); renderLocs._pending = false; renderLocs(); return; }
+  const ec = e.target.closest("[data-edit-contact]"); if (ec) return editContact(ec.dataset.editContact);
+  const es = e.target.closest("[data-edit-session]"); if (es) return editSession(es.dataset.editSession);
+  const ei = e.target.closest("[data-edit-idea]"); if (ei) return editIdea(ei.dataset.editIdea);
+  const del = e.target.closest("[data-del]");
+  if (del) {
+    if (!(await confirmBox("確定刪除這筆？刪除後無法復原。"))) return;
+    try { await db.collection(del.dataset.del).doc(del.dataset.id).delete(); toast("已刪除"); }
+    catch (err) { toast("刪除失敗：" + (err.code || err.message)); }
+    return;
+  }
+  const act = e.target.closest("[data-act]");
+  if (act) {
+    if (act.dataset.act === "cancel-contact") resetContact();
+    if (act.dataset.act === "cancel-session") resetSession();
+    if (act.dataset.act === "cancel-idea") resetIdea();
+  }
+});
+$("#l-search").addEventListener("input", renderLocs);
+$("#l-star").addEventListener("change", renderLocs);
+$("#v-places").addEventListener("chipchange", e => { if (e.detail.name === "lcat") renderLocs(); });
+$("#nl-cat").innerHTML = CATS.map(([v, l]) => `<option value="${v}">${l}</option>`).join("");
+const fL = $("#fLoc");
+function resetLoc() {
+  editing.loc = null; ["nl-name","nl-district","nl-addr","nl-phone","nl-note","nl-week"].forEach(i => $("#" + i).value = "");
+  $("#nl-cat").value = "comm"; $(".edit-banner", fL).hidden = true; $("#nl-save").textContent = "加入清單";
+}
+function editLoc(id) {
+  const l = locById(id); if (!l) return;
+  editing.loc = id; $("#nl-name").value = l.name || ""; $("#nl-district").value = l.district || ""; $("#nl-cat").value = l.cat || "other";
+  $("#nl-addr").value = l.address || ""; $("#nl-phone").value = l.phone || ""; $("#nl-note").value = l.note || ""; $("#nl-week").value = l.week || "";
+  $(".edit-banner", fL).hidden = false; $("#nl-save").textContent = "更新地點"; $("#addLocBox").open = true; window.scrollTo({ top: 0 });
+}
+fL.onsubmit = async e => {
+  e.preventDefault();
+  const name = $("#nl-name").value.trim(); if (!name) return toast("請填名稱");
+  if (!editing.loc && S.locations.some(l => l.name === name)) return toast("清單裡已經有「" + name + "」");
+  const wk = parseInt($("#nl-week").value, 10);
+  const fields = { name, district: $("#nl-district").value.trim(), cat: $("#nl-cat").value, address: $("#nl-addr").value.trim(),
+    phone: $("#nl-phone").value.trim(), note: $("#nl-note").value.trim(), week: wk > 0 ? wk : null, updatedAt: Date.now() };
+  try {
+    if (editing.loc) { await db.collection("locations").doc(editing.loc).update(fields); toast("地點已更新"); }
+    else {
+      const ref = await db.collection("locations").add(Object.assign(fields, { group: "", chain: false, status: "new", star: false, memo: "",
+        createdAt: Date.now(), createdBy: me || "" }));
+      lsSet("ontimo_lastloc", ref.id); toast("已加入地點清單，記錄時可以直接選");
+    }
+    resetLoc(); $("#addLocBox").open = false;
+  } catch (err) { toast("儲存失敗：" + (err.code || err.message)); }
+};
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-edit-loc]"); if (el) return editLoc(el.dataset.editLoc);
+  const a = e.target.closest("[data-act]"); if (!a) return;
+  if (a.dataset.act === "cancel-loc") { resetLoc(); }
+  if (a.dataset.act === "go-add-loc") { resetLoc(); setTimeout(() => { $("#addLocBox").open = true; window.scrollTo({ top: 0 }); $("#nl-name").focus(); }, 50); }
+});
+
+/* ---------- Ideas ---------- */
+const fI = $("#fIdea");
+function resetIdea() {
+  editing.idea = null; pendingPhoto.idea = null; $("#i-text").value = ""; $("#i-url").value = ""; $("#i-photo").value = "";
+  showPreview("idea", ""); setChips(fI, "itag", ""); $(".edit-banner", fI).hidden = true;
+}
+fI.onsubmit = async e => {
+  e.preventDefault(); if (needMe()) return;
+  const text = $("#i-text").value.trim(), url = $("#i-url").value.trim();
+  if (!text && !url && !pendingPhoto.idea) return toast("寫點東西、貼連結或放照片");
+  if (url && !/^https?:\/\//i.test(url)) return toast("連結要以 https:// 開頭");
+  const btn = $("button[type=submit]", fI); btn.disabled = true;
+  try {
+    const photo = await uploadPending("idea");
+    const prev = editing.idea ? S.inspo.find(x => x.id === editing.idea) : null;
+    const data = { text, url, tag: getChips(fI, "itag") || "other", photo: photo || null,
+      promoterId: prev ? prev.promoterId : me, ts: prev ? prev.ts : Date.now(), updatedAt: Date.now() };
+    if (editing.idea) await db.collection("inspo").doc(editing.idea).set(data); else await db.collection("inspo").add(data);
+    toast("已貼上 ✓"); resetIdea();
+  } catch (err) { toast("儲存失敗：" + (err.message || err.code)); }
+  btn.disabled = false;
+};
+function editIdea(id) {
+  const x = S.inspo.find(i => i.id === id); if (!x) return;
+  resetIdea(); editing.idea = id; $("#i-text").value = x.text || ""; $("#i-url").value = x.url || ""; setChips(fI, "itag", x.tag);
+  if (x.photo) { pendingPhoto.idea = { keep: x.photo }; showPreview("idea", imgSrc(x.photo)); }
+  $(".edit-banner", fI).hidden = false; location.hash = "ideas"; window.scrollTo({ top: 0 });
+}
+$("#v-ideas").addEventListener("chipchange", e => { if (e.detail.name === "ifilter") renderIdeas(); });
+function renderIdeas() {
+  const f = getChips($("#v-ideas"), "ifilter") || "all";
+  const list = S.inspo.filter(x => f === "all" || x.tag === f).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+  $("#ideaList").innerHTML = list.length ? list.map(x => {
+    const isIG = /instagram\.com/i.test(x.url || "");
+    const d = new Date(x.ts || 0);
+    return `<div class="row">
+      <div class="meta">${esc(promName(x.promoterId))}・${ymd(d)}　<span class="pill plain">${esc(label(ITAG, x.tag))}</span></div>
+      ${x.text ? `<div style="white-space:pre-wrap">${esc(x.text)}</div>` : ""}
+      ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener" class="ghost" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--accent);border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:fit-content">${isIG ? "▶ 開啟 IG" : "開啟連結"}<span class="small muted">${esc((x.url.replace(/^https?:\/\/(www\.)?/, "")).slice(0, 34))}</span></a>` : ""}
+      ${x.photo ? `<img class="thumb" loading="lazy" src="${esc(imgSrc(x.photo))}" alt="靈感照片">` : ""}
+      <div class="acts"><button class="ghost" type="button" data-edit-idea="${esc(x.id)}">編輯</button><button class="ghost danger" type="button" data-del="inspo" data-id="${esc(x.id)}">刪除</button></div>
+    </div>`;
+  }).join("") : `<div class="empty-note">靈感牆還是空的。看到好的 IG Reels、聽到有趣的一句話，都可以貼上來。</div>`;
+}
+
+/* ---------- Stats ---------- */
+function inRange(date, r) {
+  if (r === "all" || !r) return true;
+  const t = today(); if (r === "today") return date === t;
+  const mon = mondayOf(t);
+  if (r === "week") return date >= mon;
+  if (r === "last") return date >= addDays(mon, -7) && date < mon;
+  return true;
+}
+function bars(entries) {
+  const max = Math.max(1, ...entries.map(e => e[1]));
+  return entries.length ? entries.map(([k, v]) => `<div class="bar"><span>${esc(k)}</span><span class="track"><span class="fill" style="display:block;width:${v / max * 100}%"></span></span><span class="v">${v}</span></div>`).join("")
+    : `<div class="empty-note">還沒有資料</div>`;
+}
+function countTags(rows, field) {
+  const m = {}; rows.forEach(r => (r[field] || []).forEach(t => m[t] = (m[t] || 0) + 1));
+  return Object.entries(m).sort((a, b) => b[1] - a[1]);
+}
+function groupTable(C, field, opts) {
+  const rows = opts.map(([v, l]) => {
+    const g = C.filter(c => c[field] === v); if (!g.length) return null;
+    const sg = g.filter(c => c.outcome === "signed");
+    return `<tr><td>${esc(l)}</td><td>${g.length}</td><td>${pct(sg.length, g.length)}</td><td>${pct(sg.filter(c => c.med).length, sg.length)}</td><td>${pct(sg.filter(c => c.ig).length, sg.length)}</td><td>${pct(sg.filter(c => c.tier === "100").length, sg.length)}</td></tr>`;
+  }).filter(Boolean);
+  return rows.length ? `<div class="tbl-wrap"><table><thead><tr><th>${field === "who" ? "對象" : "年齡"}</th><th>接觸</th><th>加入率</th><th>加藥率</th><th>有 IG</th><th>選 100</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`
+    : `<div class="empty-note">還沒有資料</div>`;
+}
+function renderStats() {
+  const pf = $("#st-prom").value || "all", rf = getChips($("#v-stats"), "range") || "all";
+  const C = S.contacts.filter(c => (pf === "all" || c.promoterId === pf) && inRange(c.date, rf));
+  const Ss = S.sessions.filter(s => (pf === "all" || s.promoterId === pf) && inRange(s.date, rf));
+  const sg = C.filter(c => c.outcome === "signed"), act = sg.filter(c => c.med);
+  const hrs = sum(Ss.map(s => s.hours));
+  const vSpend = sum(sg.map(c => Number(c.tier) || 0));
+  const pay = hrs * (Number(S.settings.hourlyRate) || 0);
+  const tiles = [
+    ["接觸人數", C.length], ["加入", `${sg.length}<span class="small muted">（${pct(sg.length, C.length)}）</span>`],
+    ["已加一筆藥", `${act.length}<span class="small muted">（${pct(act.length, sg.length)}）</span>`],
+    ["每小時加入", hrs ? (sg.length / hrs).toFixed(1) : "–"],
+    ["禮券支出", fmtMoney(vSpend)], ["每位加藥用戶成本", act.length ? fmtMoney((vSpend + pay) / act.length) : "–"]
+  ];
+  // locations
+  const locIds = [...new Set(C.map(c => c.locationId).concat(Ss.map(s => s.locationId)))];
+  const locRows = locIds.map(id => {
+    const g = C.filter(c => c.locationId === id), gs = g.filter(c => c.outcome === "signed");
+    const h = sum(Ss.filter(s => s.locationId === id).map(s => s.hours));
+    return { id, n: g.length, sg: gs.length, med: gs.filter(c => c.med).length, h, rate: h ? gs.length / h : null };
+  }).sort((a, b) => ((b.rate ?? -1) - (a.rate ?? -1)) || (b.sg - a.sg));
+  // vouchers
+  const t100 = sg.filter(c => c.tier === "100"), t50 = sg.filter(c => c.tier === "50"), t0 = sg.filter(c => c.tier === "0");
+  const medRate = g => g.length ? Math.round(g.filter(c => c.med).length / g.length * 100) : null;
+  const insights = [];
+  if (sg.length < 10) insights.push(`<p class="muted">加入人數還不到 10 位，先累積資料再判斷。</p>`);
+  else {
+    const a = medRate(t100), b = medRate(t50);
+    if (a != null && b != null) insights.push(`<p>100 元組加藥率 <b>${a}%</b>，50 元組 <b>${b}%</b>。${Math.abs(a - b) >= 15 ? (a > b ? "100 元組明顯比較會真的用。" : "50 元組反而比較會真的用。") : "差不多：多出的 50 元主要只換到 IG 追蹤。"}</p>`);
+    insights.push(`<p>多出的 50 元共換到 <b>${t100.length}</b> 個 IG 追蹤，多花 <b>${fmtMoney(t100.length * 50)}</b>。每個 IG 追蹤值不值 NT$50，由這裡決定。</p>`);
+    const bySenior = sg.filter(c => c.who === "senior"), byChild = sg.filter(c => c.who === "child");
+    if (bySenior.length && byChild.length) insights.push(`<p>長輩選 100 的比例 <b>${pct(bySenior.filter(c => c.tier === "100").length, bySenior.length)}</b>，子女 <b>${pct(byChild.filter(c => c.tier === "100").length, byChild.length)}</b>。</p>`);
+    insights.push(`<p>沒拿禮券也加入：<b>${t0.length}</b> 人${t0.length >= sg.length * 0.15 ? "，比例不低，之後可以考慮降低禮券。" : "。"}</p>`);
+  }
+  const notes = C.filter(c => c.diffNote).sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 8);
+  $("#statsBody").innerHTML = `
+    <div class="tiles">${tiles.map(([k, n]) => `<div class="tile"><div class="n">${n}</div><div class="k">${k}</div></div>`).join("")}</div>
+    <p class="small muted">成本 = 禮券＋時數 × 時薪（${fmtMoney(Number(S.settings.hourlyRate) || 0)}/小時，在下方設定）。時數來自「每日」小結。</p>
+
+    <h2>哪個地點最好</h2>
+    ${locRows.length ? `<div class="tbl-wrap"><table><thead><tr><th>地點</th><th>接觸</th><th>加入</th><th>加藥</th><th>時數</th><th>每小時</th></tr></thead><tbody>${
+      locRows.map(r => `<tr><td>${esc(locName(r.id))}</td><td>${r.n}</td><td>${r.sg}</td><td>${r.med}</td><td>${r.h || "–"}</td><td>${r.rate != null ? r.rate.toFixed(1) : "–"}</td></tr>`).join("")
+    }</tbody></table></div>` : `<div class="empty-note">還沒有資料</div>`}
+
+    <h2>哪種人最願意</h2>
+    ${groupTable(C, "who", WHO)}
+    <h3>依年齡</h3>
+    ${groupTable(C, "age", AGE)}
+
+    <h2>禮券：50 對 100</h2>
+    <div class="tiles" style="grid-template-columns:repeat(3,1fr)">
+      <div class="tile"><div class="n">${t100.length}</div><div class="k">100 元・加藥 ${medRate(t100) ?? "–"}${t100.length ? "%" : ""}</div></div>
+      <div class="tile"><div class="n">${t50.length}</div><div class="k">50 元・加藥 ${medRate(t50) ?? "–"}${t50.length ? "%" : ""}</div></div>
+      <div class="tile"><div class="n">${t0.length}</div><div class="k">沒拿禮券</div></div>
+    </div>
+    <div class="card insight" style="margin-top:8px">${insights.join("")}</div>
+
+    <h2>拒絕原因</h2>
+    <div class="card">${bars(countTags(C.filter(c => c.outcome === "declined"), "reasons"))}</div>
+
+    <h2>看到 App 時的困難</h2>
+    <div class="card">${bars(countTags(C, "diffs"))}</div>
+    ${notes.length ? `<div class="list" style="margin-top:8px">${notes.map(c => `<div class="row"><div class="small">${esc(c.diffNote)}</div><div class="meta">${esc(label(WHO, c.who))}・${esc(locName(c.locationId))}・${esc(c.date)}</div></div>`).join("")}</div>` : ""}
+  `;
+  renderStock();
+}
+function renderStock() {
+  const all = S.contacts.filter(c => c.outcome === "signed");
+  const mon = mondayOf(today());
+  const box = ["100", "50"].map(d => {
+    const inQ = sum(S.stock.filter(s => String(s.denom) === d).map(s => s.qty));
+    const out = all.filter(c => c.tier === d).length;
+    const wk = all.filter(c => c.tier === d && c.date >= mon).length;
+    const left = inQ - out;
+    return `<div class="tile"><div class="n" style="${left <= 5 && inQ ? "color:var(--bad)" : ""}">${left}</div><div class="k">${d} 元剩餘・本週發 ${wk}・共買 ${inQ}</div></div>`;
+  }).join("");
+  $("#stockBox").innerHTML = `<div class="tiles">${box}</div>`;
+}
+function renderPromSelect() {
+  const sel = $("#st-prom"); const v = sel.value || "all";
+  sel.innerHTML = `<option value="all">所有推廣員</option>` + S.promoters.map(p => `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
+  sel.value = S.promoters.find(p => p.id === v) ? v : "all";
+}
+$("#st-prom").addEventListener("change", renderStats);
+$("#v-stats").addEventListener("chipchange", e => { if (e.detail.name === "range") renderStats(); });
+$("#fStock").onsubmit = async e => {
+  e.preventDefault();
+  const qty = parseInt($("#sk-qty").value, 10); if (!(qty > 0)) return toast("請填張數");
+  try { await db.collection("stock").add({ denom: $("#sk-denom").value, qty, date: today(), promoterId: me || "", ts: Date.now() }); $("#sk-qty").value = ""; toast("已加入庫存"); }
+  catch (err) { toast("失敗：" + (err.code || err.message)); }
+};
+$("#fSettings").onsubmit = async e => {
+  e.preventDefault();
+  try {
+    await db.doc("settings/main").set({ startDate: $("#set-start").value || "", hourlyRate: Number($("#set-rate").value) || 0, updatedAt: Date.now() });
+    toast("設定已儲存");
+  } catch (err) { toast("失敗：" + (err.code || err.message)); }
+};
+
+/* ---------- Tabs ---------- */
+function route() {
+  const tab = (location.hash || "#log").slice(1);
+  const valid = ["log","day","places","ideas","stats"].includes(tab) ? tab : "log";
+  $$(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + valid));
+  $$("nav.tabs a").forEach(a => a.classList.toggle("on", a.dataset.tab === valid));
+  if (valid === "stats") renderStats();
+}
+window.addEventListener("hashchange", route);
+
+function renderAll() {
+  renderHeader(); refreshLocSelects(); renderLog(); renderSessions(); renderLocs(); renderIdeas(); renderPromSelect();
+  if ($("#v-stats").classList.contains("on")) renderStats(); else renderStock();
+}
+
+$("#fLogin").onsubmit = async e => {
+  e.preventDefault();
+  try { await api("POST", "/api/login", { passcode: $("#login-pass").value }); $("#loginSheet").hidden = true; $("#login-pass").value = ""; cursor = 0; sync(); }
+  catch (err) { toast(err.message === "wrong_passcode" ? "密碼不對，再試一次" : "登入失敗：" + err.message); }
+};
+
+/* ---------- Init ---------- */
+buildChips();
+setChips($("#v-ideas"), "ifilter", "all"); setChips($("#v-places"), "lcat", "all"); setChips($("#v-stats"), "range", "all");
+$("#s-date").value = today();
+resetContact(); resetLoc(); route(); renderAll();
+
+let renderQueued = false;
+function queueRender() { if (renderQueued) return; renderQueued = true; requestAnimationFrame(() => { renderQueued = false; renderAll(); }); }
+
+/* ---------- Sync with the server ---------- */
+const COLS = ["promoters","locations","contacts","sessions","inspo","stock","settings"];
+const DATA = {}; COLS.forEach(c => DATA[c] = new Map());
+let cursor = 0, syncing = false;
+function applyRows(rows) {
+  rows.forEach(r => {
+    if (!DATA[r.collection]) return;
+    if (r.deleted) DATA[r.collection].delete(r.id); else DATA[r.collection].set(r.id, r.data);
+    if (r.updated_at > cursor) cursor = r.updated_at;
+  });
+  COLS.forEach(c => { if (c !== "settings") S[c] = [...DATA[c]].map(([id, d]) => Object.assign({}, d, { id })); });
+  S.settings = DATA.settings.get("main") || {};
+  if (document.activeElement !== $("#set-start")) $("#set-start").value = S.settings.startDate || "";
+  if (document.activeElement !== $("#set-rate")) $("#set-rate").value = S.settings.hourlyRate ?? 1000;
+}
+async function sync() {
+  if (syncing) return; syncing = true;
+  try {
+    const r = await api("GET", "/api/sync?since=" + cursor);
+    applyRows(r.rows);
+    if (!gotData) {
+      gotData = true; banner("");
+      if (!askedMe && !S.promoters.find(p => p.id === me)) { askedMe = true; renderMeSheet(); $("#meSheet").hidden = false; }
+    }
+    if (r.rows.length || !renderAll._once) { renderAll._once = true; queueRender(); }
+    if (navigator.onLine !== false) banner("");
+  } catch (err) {
+    if (err.status !== 401) banner("連不上伺服器，資料可能不是最新的。");
+  }
+  syncing = false;
+}
+setInterval(() => { if (document.visibilityState === "visible") sync(); }, 15000);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") sync(); });
+sync();
+})();
+</script>
+</body>
+</html>

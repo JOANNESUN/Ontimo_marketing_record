@@ -1,0 +1,15 @@
+{
+  "name": "ontimo-marketing-record",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "seed": "node scripts/build-seed.mjs",
+    "db:migrate:local": "wrangler d1 migrations apply ontimo-marketing-record --local",
+    "db:migrate": "wrangler d1 migrations apply ontimo-marketing-record --remote",
+    "dev": "wrangler pages dev",
+    "deploy": "wrangler pages deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}
