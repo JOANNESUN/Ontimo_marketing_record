@@ -93,7 +93,12 @@ button.danger{color:var(--bad);border-color:var(--bad-soft)}
   justify-content:space-between;gap:8px;font-size:15px;font-weight:700}
 .edit-banner[hidden]{display:none}
 .preview img{max-width:100%;border-radius:12px;margin-top:8px;display:block}
-.today{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.today{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.voucher-tile{grid-column:1 / -1;display:grid;gap:4px;text-decoration:none;color:var(--ink);border:1px solid var(--line)}
+.voucher-tile .vt-row{display:flex;gap:18px;flex-wrap:wrap;font-size:17px}
+.voucher-tile .vt-row b{font-size:28px;font-variant-numeric:tabular-nums;margin-right:2px}
+.voucher-tile .vt-left b{color:var(--ink)}
+.voucher-tile .vt-left b.low{color:var(--bad)}
 .tile{background:var(--surface);border-radius:var(--r);padding:12px 14px;min-width:0}
 .tile .n{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
 .tile .k{font-size:14px;color:var(--muted)}
@@ -289,7 +294,8 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
   </div>
   <div id="statsBody"></div>
 
-  <h2>禮券庫存</h2>
+  <h2 id="stock">禮券庫存</h2>
+  <p class="small muted" style="margin:-4px 0 10px">買了多少張禮券就在這裡登記。之後每記一位拿禮券的人，庫存會自動減少。</p>
   <div id="stockBox"></div>
   <form id="fStock" class="card form" novalidate style="margin-top:8px">
     <div class="lbl">買進禮券</div>
@@ -680,10 +686,16 @@ function renderLog() {
   const t = today();
   const mine = S.contacts.filter(c => c.date === t && c.promoterId === me);
   const signed = mine.filter(c => c.outcome === "signed");
+  const left = stockLeft();
+  const hasStock = S.stock.length > 0;
   $("#todayBar").innerHTML = [
-    ["今天接觸", mine.length], ["加入", signed.length], ["已加藥", signed.filter(c => c.med).length],
-    ["禮券 100／50", signed.filter(c => c.tier === "100").length + "/" + signed.filter(c => c.tier === "50").length]
-  ].map(([k, n]) => `<div class="tile"><div class="n">${n}</div><div class="k">${k}</div></div>`).join("");
+    ["今天接觸", mine.length], ["加入", signed.length], ["已加藥", signed.filter(c => c.med).length]
+  ].map(([k, n]) => `<div class="tile"><div class="n">${n}</div><div class="k">${k}</div></div>`).join("") +
+  `<a href="#stats" class="tile voucher-tile" data-act="go-stock">
+    <div class="k">今天發出的禮券</div>
+    <div class="vt-row"><span><b>${signed.filter(c => c.tier === "100").length}</b> 張 100 元</span><span><b>${signed.filter(c => c.tier === "50").length}</b> 張 50 元</span></div>
+    <div class="k vt-left">${hasStock ? "庫存還剩：" + ["100", "50"].map(d => stockBought(d) ? `${d} 元 <b class="${left[d] <= 5 ? "low" : ""}">${Math.max(0, left[d])}</b> 張` : `${d} 元 <b class="low">未登記</b>`).join("・") : "還沒登記禮券庫存，點這裡新增"}</div>
+  </a>`;
   const recent = S.contacts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.ts || 0) - (a.ts || 0)).slice(0, 30);
   let html = "", lastD = null;
   recent.forEach(c => {
@@ -821,6 +833,7 @@ document.addEventListener("click", async e => {
     if (act.dataset.act === "cancel-contact") resetContact();
     if (act.dataset.act === "cancel-session") resetSession();
     if (act.dataset.act === "cancel-idea") resetIdea();
+    if (act.dataset.act === "go-stock") setTimeout(() => { const h = $("#stock"); if (h) h.scrollIntoView({ block: "start" }); window.scrollBy(0, -70); }, 60);
   }
 });
 $("#l-search").addEventListener("input", renderLocs);
@@ -1001,6 +1014,14 @@ function renderStats() {
   `;
   renderStock();
 }
+function stockBought(d) { return sum(S.stock.filter(s => String(s.denom) === d).map(s => s.qty)); }
+function stockLeft() {
+  const out = {};
+  ["100", "50"].forEach(d => {
+    out[d] = sum(S.stock.filter(s => String(s.denom) === d).map(s => s.qty)) - S.contacts.filter(c => c.outcome === "signed" && c.tier === d).length;
+  });
+  return out;
+}
 function renderStock() {
   const all = S.contacts.filter(c => c.outcome === "signed");
   const mon = mondayOf(today());
@@ -1009,7 +1030,8 @@ function renderStock() {
     const out = all.filter(c => c.tier === d).length;
     const wk = all.filter(c => c.tier === d && c.date >= mon).length;
     const left = inQ - out;
-    return `<div class="tile"><div class="n" style="${left <= 5 && inQ ? "color:var(--bad)" : ""}">${left}</div><div class="k">${d} 元剩餘・本週發 ${wk}・共買 ${inQ}</div></div>`;
+    if (!inQ) return `<div class="tile"><div class="k">${d} 元還剩</div><div class="n" style="font-size:20px;color:var(--bad)">未登記</div><div class="k">本週發 ${wk} 張</div></div>`;
+    return `<div class="tile"><div class="k">${d} 元還剩</div><div class="n" style="${left <= 5 ? "color:var(--bad)" : ""}">${Math.max(0, left)} 張</div><div class="k">本週發 ${wk}・共買 ${inQ}</div></div>`;
   }).join("");
   $("#stockBox").innerHTML = `<div class="tiles">${box}</div>`;
 }
@@ -1040,6 +1062,8 @@ function route() {
   const valid = ["log","day","places","ideas","stats"].includes(tab) ? tab : "log";
   $$(".view").forEach(v => v.classList.toggle("on", v.id === "v-" + valid));
   $$("nav.tabs a").forEach(a => a.classList.toggle("on", a.dataset.tab === valid));
+  if (route._last && route._last !== valid) window.scrollTo(0, 0);
+  route._last = valid;
   if (valid === "stats") renderStats();
 }
 window.addEventListener("hashchange", route);
