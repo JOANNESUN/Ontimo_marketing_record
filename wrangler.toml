@@ -6,7 +6,7 @@ pages_build_output_dir = "public"
 binding = "DB"
 database_name = "ontimo-marketing-record"
 # Replace with the id printed by: npx wrangler d1 create ontimo-marketing-record
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "2f87b518-483e-4771-b135-05268a4b6866"
 migrations_dir = "migrations"
 
 [[r2_buckets]]
