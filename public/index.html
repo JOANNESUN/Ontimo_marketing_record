@@ -2,6 +2,7 @@
 <html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
+<meta name="theme-color" content="#123B73">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ontimo 推廣紀錄</title>
 <meta name="robots" content="noindex">
@@ -9,140 +10,155 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700&display=swap" rel="stylesheet">
 <style>
-/* Layout: one phone-width column, fixed bottom tab bar; forms first, results below. */
+/* Layout: one phone-width column, bottom tab bar, sticky save. Single theme on Ontimo blue. */
 :root{
-  --bg:#f3f5f4; --surface:#ffffff; --ink:#18221f; --muted:#5f6d68; --line:#dbe2df;
-  --accent:#0d6b5f; --accent-ink:#ffffff; --accent-soft:#dcefeb;
-  --amber:#b7791f; --amber-soft:#f8ecd6;
-  --good:#1f7a3d; --bad:#b23a3a; --bad-soft:#f6e0e0;
+  --bg:#123B73;          /* Ontimo blue page */
+  --surface:#1B4C8E;     /* cards */
+  --field:#0F3263;       /* inputs, unselected chips */
+  --line:#3566A8;
+  --ink:#F4F8FD; --muted:#B7CBE6;
+  --accent:#FFC94D; --accent-ink:#2E1F00; --accent-soft:rgba(255,201,77,.18);
+  --sky:#8CCBFF; --sky-ink:#06264A;
+  --good:#7EE0A1; --bad:#FF8F85; --bad-ink:#3D0905; --bad-soft:rgba(255,143,133,.2);
   --display:"Noto Serif TC", "Songti TC", serif;
   --body:"Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
-  --r:12px;
-  color-scheme: light;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#101614; --surface:#18201d; --ink:#e7eeeb; --muted:#9aaba5; --line:#2b3632;
-    --accent:#3fb8a5; --accent-ink:#06201b; --accent-soft:#163a34;
-    --amber:#e2a54a; --amber-soft:#3a2c14;
-    --good:#5cc27d; --bad:#e37a7a; --bad-soft:#3d1f1f;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#101614; --surface:#18201d; --ink:#e7eeeb; --muted:#9aaba5; --line:#2b3632;
-  --accent:#3fb8a5; --accent-ink:#06201b; --accent-soft:#163a34;
-  --amber:#e2a54a; --amber-soft:#3a2c14;
-  --good:#5cc27d; --bad:#e37a7a; --bad-soft:#3d1f1f;
+  --r:14px;
   color-scheme: dark;
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
-  padding:0 0 calc(76px + env(safe-area-inset-bottom));}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.5;
+  padding:0 0 calc(84px + env(safe-area-inset-bottom));-webkit-text-size-adjust:100%}
 .wrap{max-width:560px;margin:0 auto;padding:0 16px}
+a{color:var(--accent)}
 header.top{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
   padding-top:env(safe-area-inset-top)}
-header.top .wrap{display:flex;align-items:center;gap:12px;min-height:56px}
-header h1{font-family:var(--display);font-size:19px;margin:0;line-height:1.2}
-header .sub{font-size:12px;color:var(--muted)}
+header.top .wrap{display:flex;align-items:center;gap:12px;min-height:60px}
+header h1{font-family:var(--display);font-size:20px;margin:0;line-height:1.25}
+header .sub{font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 header .grow{flex:1;min-width:0}
 .me-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;
-  padding:8px 14px;font:inherit;font-size:14px;min-height:40px;white-space:nowrap}
+  padding:8px 16px;font:inherit;font-size:16px;min-height:44px;white-space:nowrap;max-width:40vw;overflow:hidden;text-overflow:ellipsis}
 .me-btn.empty{border-color:var(--accent);color:var(--accent)}
-h2{font-size:17px;margin:24px 0 10px;text-wrap:balance}
-h3{font-size:15px;margin:18px 0 8px}
-.view{display:none;padding:14px 0 24px}
+h2{font-size:20px;margin:28px 0 12px;text-wrap:balance}
+h3{font-size:17px;margin:20px 0 8px}
+.view{display:none;padding:16px 0 24px}
 .view.on{display:block}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px}
-.form{display:grid;gap:8px}
-.lbl{font-size:13px;font-weight:700;color:var(--muted);margin-top:8px}
-input[type=text],input[type=number],input[type=date],input[type=url],select,textarea{
-  width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);
-  border-radius:10px;padding:10px 12px;min-height:46px}
-textarea{min-height:70px;resize:vertical}
-input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible{
+.card{background:var(--surface);border-radius:var(--r);padding:16px}
+.form{display:grid;gap:10px;min-width:0}
+.lbl{font-size:16px;font-weight:700;color:var(--ink);margin-top:10px}
+.lbl + .chips,.lbl + input,.lbl + select,.lbl + textarea{margin-top:-2px}
+input[type=text],input[type=number],input[type=date],input[type=time],input[type=url],input[type=password],select,textarea{
+  display:block;width:100%;min-width:0;max-width:100%;font:inherit;font-size:17px;color:var(--ink);background:var(--field);
+  border:1px solid var(--line);border-radius:12px;padding:12px 14px;min-height:52px;-webkit-appearance:none;appearance:none}
+input[type=date],input[type=time]{text-align:left}
+input::-webkit-date-and-time-value{text-align:left}
+input::placeholder,textarea::placeholder{color:var(--muted);opacity:.8}
+select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat;padding-right:40px}
+input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.photo-btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:52px;border:1px dashed var(--line);
+  border-radius:12px;background:var(--field);color:var(--ink);font-size:17px;cursor:pointer}
+.photo-btn svg{width:22px;height:22px}
+.photo-btn:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+textarea{min-height:88px;resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,summary:focus-visible,a:focus-visible{
   outline:3px solid var(--accent);outline-offset:2px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;
-  padding:8px 14px;font:inherit;font-size:15px;min-height:42px;cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:500}
-.chips.big .chip{flex:1;min-height:52px;font-size:17px;font-weight:500}
-.chips[data-name="outcome"] .chip[data-v="declined"][aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:#fff}
-.chips[data-name="tier"] .chip[data-v="50"][aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#1b1306}
-.check{display:flex;align-items:center;gap:10px;min-height:44px;font-size:15px}
-.check input{width:22px;height:22px;accent-color:var(--accent)}
-button.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;font:inherit;
-  font-weight:700;font-size:17px;min-height:52px;margin-top:10px;cursor:pointer}
+/* Chips: even grid so buttons line up; data-cols sets columns, .scroll makes a swipe row */
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.chips[data-cols="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+.chips[data-cols="4"]{grid-template-columns:repeat(4,minmax(0,1fr))}
+.chips[data-cols="5"]{grid-template-columns:repeat(5,minmax(0,1fr))}
+.chips.scroll{display:flex;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chips.scroll .chip{flex:0 0 auto;padding:0 18px}
+.chip{border:1px solid var(--line);background:var(--field);color:var(--ink);border-radius:12px;
+  padding:8px 6px;font:inherit;font-size:16px;line-height:1.25;min-height:50px;cursor:pointer;text-align:center;min-width:0}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.chips.big .chip{min-height:60px;font-size:19px;font-weight:700}
+.chips[data-name="outcome"] .chip[data-v="declined"][aria-pressed="true"]{background:var(--bad);border-color:var(--bad);color:var(--bad-ink)}
+.chips[data-name="tier"] .chip[data-v="50"][aria-pressed="true"]{background:var(--sky);border-color:var(--sky);color:var(--sky-ink)}
+.check{display:flex;align-items:center;gap:12px;min-height:52px;font-size:17px;background:var(--field);border:1px solid var(--line);
+  border-radius:12px;padding:0 14px}
+.check input{width:24px;height:24px;accent-color:var(--accent);flex:0 0 auto}
+button.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:14px;font:inherit;
+  font-weight:700;font-size:18px;min-height:56px;width:100%;margin-top:12px;cursor:pointer}
 button.primary:disabled{opacity:.6}
-button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:10px;
-  font:inherit;font-size:14px;min-height:38px;padding:6px 12px;cursor:pointer}
+.sticky-save{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom));z-index:3;
+  box-shadow:0 -10px 16px -6px var(--surface)}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:12px;
+  font:inherit;font-size:15px;min-height:44px;padding:8px 14px;cursor:pointer}
 button.danger{color:var(--bad);border-color:var(--bad-soft)}
-.edit-banner{background:var(--amber-soft);border-radius:10px;padding:8px 12px;display:flex;align-items:center;
-  justify-content:space-between;gap:8px;font-size:14px;font-weight:500}
+.edit-banner{background:var(--accent-soft);border:1px solid var(--accent);border-radius:12px;padding:10px 12px;display:flex;align-items:center;
+  justify-content:space-between;gap:8px;font-size:15px;font-weight:700}
 .edit-banner[hidden]{display:none}
-.preview img{max-width:100%;border-radius:10px;margin-top:6px;display:block}
-.today{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px;min-width:0}
-.tile .n{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
-.tile .k{font-size:12px;color:var(--muted)}
-.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.list{display:grid;gap:8px}
-.row{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:6px}
-.row .meta{font-size:12px;color:var(--muted)}
+.preview img{max-width:100%;border-radius:12px;margin-top:8px;display:block}
+.today{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.tile{background:var(--surface);border-radius:var(--r);padding:12px 14px;min-width:0}
+.tile .n{font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.tile .k{font-size:14px;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.list{display:grid;gap:10px}
+.row{background:var(--surface);border-radius:var(--r);padding:14px;display:grid;gap:8px;min-width:0}
+.row .meta{font-size:14px;color:var(--muted)}
 .row .acts{display:flex;gap:8px;justify-content:flex-end}
-.pill{display:inline-block;font-size:12px;border-radius:999px;padding:2px 9px;background:var(--accent-soft);color:var(--ink);
-  white-space:nowrap}
+.pill{display:inline-block;font-size:14px;border-radius:999px;padding:3px 10px;background:var(--accent-soft);color:var(--ink);white-space:nowrap}
 .pill.bad{background:var(--bad-soft)}
-.pill.amber{background:var(--amber-soft)}
-.pill.plain{background:var(--bg);border:1px solid var(--line)}
+.pill.amber{background:rgba(140,203,255,.2)}
+.pill.plain{background:var(--field)}
 .tags{display:flex;flex-wrap:wrap;gap:6px}
-.thumb{max-width:100%;max-height:260px;border-radius:10px;object-fit:cover}
+.thumb{width:100%;max-height:300px;border-radius:12px;object-fit:cover}
 .muted{color:var(--muted)}
-.small{font-size:13px}
-.empty-note{color:var(--muted);font-size:14px;padding:14px;text-align:center;border:1px dashed var(--line);border-radius:var(--r)}
-.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
-table{border-collapse:collapse;width:100%;font-size:14px;font-variant-numeric:tabular-nums}
-th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
-th:first-child,td:first-child{text-align:left;white-space:normal;min-width:110px}
-th{font-size:12px;color:var(--muted);font-weight:500}
-tr:last-child td{border-bottom:0}
-.bar{display:grid;grid-template-columns:minmax(90px,38%) 1fr 34px;gap:8px;align-items:center;font-size:14px;padding:4px 0}
-.bar .track{height:12px;background:var(--bg);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.small{font-size:15px}
+.empty-note{color:var(--muted);font-size:16px;padding:18px;text-align:center;border:1px dashed var(--line);border-radius:var(--r)}
+/* Stat cards replace wide tables */
+.stat-card{background:var(--surface);border-radius:var(--r);padding:14px;display:grid;gap:10px}
+.stat-card .t{font-weight:700;font-size:17px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.stat-card .t .rank{color:var(--muted);font-weight:400;font-size:14px;white-space:nowrap}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.kv div{background:var(--field);border-radius:10px;padding:8px 10px;min-width:0}
+.kv b{display:block;font-size:19px;font-variant-numeric:tabular-nums;line-height:1.2}
+.kv span{font-size:13px;color:var(--muted)}
+.bar{display:grid;grid-template-columns:minmax(0,1fr) 40px;gap:4px 10px;align-items:center;font-size:16px;padding:6px 0}
+.bar .track{grid-column:1 / -1;grid-row:2;height:10px;background:var(--field);border-radius:6px;overflow:hidden}
 .bar .fill{height:100%;background:var(--accent)}
-.bar .v{text-align:right;font-variant-numeric:tabular-nums}
-.insight{display:grid;gap:8px}
-.insight p{margin:0;font-size:15px}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+.insight{display:grid;gap:10px}
+.insight p{margin:0;font-size:16px}
+.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.split > div{min-width:0;display:grid;gap:6px}
+.split > div .lbl{margin-top:0}
 .loc .top{display:flex;align-items:flex-start;gap:8px}
-.loc .name{font-weight:700;flex:1}
-.star{background:none;border:0;font-size:22px;line-height:1;min-width:40px;min-height:40px;cursor:pointer;color:var(--line)}
-.star.on{color:var(--amber)}
-.loc details summary{cursor:pointer;color:var(--accent);font-size:14px;min-height:36px;display:flex;align-items:center}
-.loc details[open] summary{margin-bottom:6px}
-.filters{display:grid;gap:8px;margin-bottom:12px}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);
+.loc .name{font-weight:700;flex:1;min-width:0;font-size:18px}
+.star{background:none;border:0;font-size:26px;line-height:1;min-width:44px;min-height:44px;cursor:pointer;color:var(--line)}
+.star.on{color:var(--accent)}
+.loc details summary{cursor:pointer;color:var(--accent);font-size:16px;min-height:44px;display:flex;align-items:center}
+.filters{display:grid;gap:10px;margin-bottom:14px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:#0D2E5C;border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom)}
 nav.tabs .wrap{display:grid;grid-template-columns:repeat(5,1fr);padding:0 4px}
-nav.tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:60px;
-  color:var(--muted);text-decoration:none;font-size:12px}
-nav.tabs a svg{width:22px;height:22px}
+nav.tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:64px;
+  color:var(--muted);text-decoration:none;font-size:14px}
+nav.tabs a svg{width:24px;height:24px}
 nav.tabs a.on{color:var(--accent);font-weight:700}
-.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet-bg{position:fixed;inset:0;background:rgba(3,14,32,.6);z-index:20;display:flex;align-items:flex-end;justify-content:center}
 .sheet-bg[hidden]{display:none}
-.sheet{background:var(--surface);width:100%;max-width:560px;border-radius:16px 16px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));
-  display:grid;gap:10px;max-height:85vh;overflow:auto}
+.sheet{background:var(--surface);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));
+  display:grid;gap:12px;max-height:85vh;overflow:auto}
 .sheet h2{margin:0}
-.sheet .opt{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;
-  padding:10px 12px;min-height:48px;background:var(--bg);color:var(--ink);font:inherit;cursor:pointer;width:100%;text-align:left}
+.sheet .opt{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;min-height:56px;background:var(--field);color:var(--ink);font:inherit;cursor:pointer;width:100%;text-align:left}
 .sheet .opt.on{border-color:var(--accent);background:var(--accent-soft)}
 .inline{display:flex;gap:8px}
-.inline > *{flex:1}
+.inline > *{flex:1;min-width:0}
 .inline > button{flex:0 0 auto}
-#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom));z-index:30;
-  background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:14px;max-width:90vw;display:none}
-#banner{background:var(--amber-soft);font-size:13px;padding:8px 16px;text-align:center}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(150px + env(safe-area-inset-bottom));z-index:30;
+  background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;font-size:16px;font-weight:700;max-width:90vw;display:none}
+#banner{background:var(--accent-soft);font-size:15px;padding:8px 16px;text-align:center}
 #banner[hidden]{display:none}
+.linkbtn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--accent);border:1px solid var(--line);
+  border-radius:12px;padding:10px 14px;min-height:44px;max-width:100%;overflow:hidden}
+@media (min-width:420px){ .kv{grid-template-columns:repeat(4,minmax(0,1fr))} }
 @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
@@ -167,16 +183,16 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
     <div class="edit-banner" hidden>正在編輯一筆紀錄 <button type="button" class="ghost" data-act="cancel-contact">取消編輯</button></div>
     <div class="split">
       <div><label class="lbl" for="c-date">日期</label><input type="date" id="c-date"></div>
-      <div><label class="lbl" for="c-time">時間</label><input type="time" id="c-time" style="width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:46px"></div>
+      <div><label class="lbl" for="c-time">時間</label><input type="time" id="c-time"></div>
     </div>
     <label class="lbl" for="c-loc">地點</label>
     <select id="c-loc" class="loc-select"></select>
-    <a href="#places" class="small" data-act="go-add-loc" style="color:var(--accent)">地點不在清單裡？新增地點</a>
+    <a href="#places" class="small" data-act="go-add-loc" style="padding:6px 0;display:inline-block">地點不在清單裡？新增地點</a>
     <div class="lbl">對象</div><div class="chips" data-name="who"></div>
-    <div class="lbl">年齡（大約）</div><div class="chips" data-name="age"></div>
+    <div class="lbl">年齡（大約）</div><div class="chips" data-name="age" data-cols="3"></div>
     <div class="lbl">結果</div><div class="chips big" data-name="outcome"></div>
     <div data-show="signed" hidden>
-      <div class="lbl">禮券</div><div class="chips" data-name="tier"></div>
+      <div class="lbl">禮券</div><div class="chips" data-name="tier" data-cols="3"></div>
       <div class="lbl">完成項目（看過手機畫面才勾）</div><div class="chips" data-name="checks" data-multi="1"></div>
     </div>
     <div data-show="declined" hidden>
@@ -188,12 +204,12 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
     <div class="lbl">照片（選填）</div>
     <label class="check"><input type="checkbox" id="c-consent"> 對方同意拍照</label>
     <div id="c-photo-wrap" hidden>
-      <input type="file" accept="image/*" id="c-photo">
+      <label class="photo-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>拍照或選照片<input type="file" accept="image/*" id="c-photo"></label>
       <div class="preview" id="c-preview"></div>
     </div>
     <label class="lbl" for="c-note">備註（選填）</label>
     <textarea id="c-note" placeholder="對方說了什麼、有什麼想法"></textarea>
-    <button class="primary" type="submit" id="c-save">儲存這筆</button>
+    <button class="primary sticky-save" type="submit" id="c-save">儲存這筆</button>
   </form>
   <h2>最近紀錄</h2>
   <div class="list" id="recentList"></div>
@@ -210,12 +226,12 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
     </div>
     <label class="lbl" for="s-loc">地點</label>
     <select id="s-loc" class="loc-select"></select>
-    <div class="lbl">人潮（1 少 – 5 多）</div><div class="chips" data-name="traffic"></div>
-    <div class="lbl">老闆／店員的反應</div><div class="chips" data-name="owner"></div>
-    <div class="lbl">人最多的時段（可複選）</div><div class="chips" data-name="slot" data-multi="1"></div>
+    <div class="lbl">人潮（1 少 – 5 多）</div><div class="chips" data-name="traffic" data-cols="5"></div>
+    <div class="lbl">老闆／店員的反應</div><div class="chips" data-name="owner" data-cols="3"></div>
+    <div class="lbl">人最多的時段（可複選）</div><div class="chips" data-name="slot" data-multi="1" data-cols="3"></div>
     <label class="lbl" for="s-note">這次的心得</label>
     <textarea id="s-note" placeholder="哪種人最願意聽？哪句話最有用？下次要改什麼？"></textarea>
-    <button class="primary" type="submit">儲存今天</button>
+    <button class="primary sticky-save" type="submit">儲存今天</button>
   </form>
   <h2>每日小結</h2>
   <div class="list" id="sessionList"></div>
@@ -224,7 +240,7 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
 <!-- 地點 -->
 <section class="view" id="v-places">
   <details class="card" style="margin-bottom:12px" id="addLocBox">
-    <summary style="cursor:pointer;font-weight:700;color:var(--accent);min-height:32px;display:flex;align-items:center">＋ 新增地點</summary>
+    <summary style="cursor:pointer;font-weight:700;color:var(--accent);min-height:44px;display:flex;align-items:center;font-size:18px">＋ 新增地點</summary>
     <form id="fLoc" class="form" novalidate style="margin-top:10px">
       <div class="edit-banner" hidden>正在編輯地點資料 <button type="button" class="ghost" data-act="cancel-loc">取消編輯</button></div>
       <label class="lbl" for="nl-name">名稱</label><input type="text" id="nl-name" placeholder="例：○○藥局">
@@ -241,7 +257,7 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
   </details>
   <div class="filters">
     <input type="text" id="l-search" placeholder="搜尋藥局名稱或區域" aria-label="搜尋地點">
-    <div class="chips" data-name="lcat" id="l-cat"></div>
+    <div class="chips scroll" data-name="lcat" id="l-cat"></div>
     <label class="check"><input type="checkbox" id="l-star"> 只看「值得再去」⭐</label>
   </div>
   <div class="list" id="locList"></div>
@@ -257,11 +273,11 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
     <input type="url" id="i-url" placeholder="https://www.instagram.com/reel/…" inputmode="url">
     <div class="lbl">類別</div><div class="chips" data-name="itag"></div>
     <div class="lbl">照片（選填，拍到人請先問過）</div>
-    <input type="file" accept="image/*" id="i-photo">
+    <label class="photo-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>拍照或選照片<input type="file" accept="image/*" id="i-photo"></label>
     <div class="preview" id="i-preview"></div>
     <button class="primary" type="submit">貼到靈感牆</button>
   </form>
-  <div class="chips" data-name="ifilter" style="margin:16px 0 10px"></div>
+  <div class="chips scroll" data-name="ifilter" style="margin-top:18px;margin-bottom:12px"></div>
   <div class="list" id="ideaList"></div>
 </section>
 
@@ -269,7 +285,7 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
 <section class="view" id="v-stats">
   <div class="filters">
     <select id="st-prom" aria-label="推廣員"></select>
-    <div class="chips" data-name="range"></div>
+    <div class="chips" data-name="range" data-cols="4"></div>
   </div>
   <div id="statsBody"></div>
 
@@ -321,7 +337,7 @@ nav.tabs a.on{color:var(--accent);font-weight:700}
     <h2 id="confirmMsg">確定刪除？</h2>
     <div class="split">
       <button class="ghost" type="button" id="confirmNo">取消</button>
-      <button class="primary" type="button" id="confirmYes" style="margin:0;background:var(--bad);color:#fff">刪除</button>
+      <button class="primary" type="button" id="confirmYes" style="margin:0;background:var(--bad);color:var(--bad-ink)">刪除</button>
     </div>
   </div>
 </div>
@@ -666,7 +682,7 @@ function renderLog() {
   const signed = mine.filter(c => c.outcome === "signed");
   $("#todayBar").innerHTML = [
     ["今天接觸", mine.length], ["加入", signed.length], ["已加藥", signed.filter(c => c.med).length],
-    ["禮券 100/50", signed.filter(c => c.tier === "100").length + "/" + signed.filter(c => c.tier === "50").length]
+    ["禮券 100／50", signed.filter(c => c.tier === "100").length + "/" + signed.filter(c => c.tier === "50").length]
   ].map(([k, n]) => `<div class="tile"><div class="n">${n}</div><div class="k">${k}</div></div>`).join("");
   const recent = S.contacts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.ts || 0) - (a.ts || 0)).slice(0, 30);
   let html = "", lastD = null;
@@ -884,7 +900,7 @@ function renderIdeas() {
     return `<div class="row">
       <div class="meta">${esc(promName(x.promoterId))}・${ymd(d)}　<span class="pill plain">${esc(label(ITAG, x.tag))}</span></div>
       ${x.text ? `<div style="white-space:pre-wrap">${esc(x.text)}</div>` : ""}
-      ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener" class="ghost" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--accent);border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:fit-content">${isIG ? "▶ 開啟 IG" : "開啟連結"}<span class="small muted">${esc((x.url.replace(/^https?:\/\/(www\.)?/, "")).slice(0, 34))}</span></a>` : ""}
+      ${x.url ? `<a href="${esc(x.url)}" target="_blank" rel="noopener" class="linkbtn">${isIG ? "▶ 開啟 IG" : "開啟連結"}<span class="small muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc((x.url.replace(/^https?:\/\/(www\.)?/, "")).slice(0, 34))}</span></a>` : ""}
       ${x.photo ? `<img class="thumb" loading="lazy" src="${esc(imgSrc(x.photo))}" alt="靈感照片">` : ""}
       <div class="acts"><button class="ghost" type="button" data-edit-idea="${esc(x.id)}">編輯</button><button class="ghost danger" type="button" data-del="inspo" data-id="${esc(x.id)}">刪除</button></div>
     </div>`;
@@ -902,7 +918,7 @@ function inRange(date, r) {
 }
 function bars(entries) {
   const max = Math.max(1, ...entries.map(e => e[1]));
-  return entries.length ? entries.map(([k, v]) => `<div class="bar"><span>${esc(k)}</span><span class="track"><span class="fill" style="display:block;width:${v / max * 100}%"></span></span><span class="v">${v}</span></div>`).join("")
+  return entries.length ? entries.map(([k, v]) => `<div class="bar"><span>${esc(k)}</span><span class="v">${v}</span><span class="track"><span class="fill" style="display:block;width:${v / max * 100}%"></span></span></div>`).join("")
     : `<div class="empty-note">還沒有資料</div>`;
 }
 function countTags(rows, field) {
@@ -910,13 +926,14 @@ function countTags(rows, field) {
   return Object.entries(m).sort((a, b) => b[1] - a[1]);
 }
 function groupTable(C, field, opts) {
-  const rows = opts.map(([v, l]) => {
+  const cards = opts.map(([v, l]) => {
     const g = C.filter(c => c[field] === v); if (!g.length) return null;
     const sg = g.filter(c => c.outcome === "signed");
-    return `<tr><td>${esc(l)}</td><td>${g.length}</td><td>${pct(sg.length, g.length)}</td><td>${pct(sg.filter(c => c.med).length, sg.length)}</td><td>${pct(sg.filter(c => c.ig).length, sg.length)}</td><td>${pct(sg.filter(c => c.tier === "100").length, sg.length)}</td></tr>`;
-  }).filter(Boolean);
-  return rows.length ? `<div class="tbl-wrap"><table><thead><tr><th>${field === "who" ? "對象" : "年齡"}</th><th>接觸</th><th>加入率</th><th>加藥率</th><th>有 IG</th><th>選 100</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`
-    : `<div class="empty-note">還沒有資料</div>`;
+    return { n: g.length, html: `<div class="stat-card"><div class="t"><span>${esc(l)}</span><span class="rank">接觸 ${g.length} 人</span></div>
+      <div class="kv"><div><b>${pct(sg.length, g.length)}</b><span>加入率</span></div><div><b>${pct(sg.filter(c => c.med).length, sg.length)}</b><span>加藥率</span></div>
+      <div><b>${pct(sg.filter(c => c.ig).length, sg.length)}</b><span>有追 IG</span></div><div><b>${pct(sg.filter(c => c.tier === "100").length, sg.length)}</b><span>選 100</span></div></div></div>` };
+  }).filter(Boolean).sort((a, b) => b.n - a.n);
+  return cards.length ? `<div class="list">${cards.map(c => c.html).join("")}</div>` : `<div class="empty-note">還沒有資料</div>`;
 }
 function renderStats() {
   const pf = $("#st-prom").value || "all", rf = getChips($("#v-stats"), "range") || "all";
@@ -958,9 +975,9 @@ function renderStats() {
     <p class="small muted">成本 = 禮券＋時數 × 時薪（${fmtMoney(Number(S.settings.hourlyRate) || 0)}/小時，在下方設定）。時數來自「每日」小結。</p>
 
     <h2>哪個地點最好</h2>
-    ${locRows.length ? `<div class="tbl-wrap"><table><thead><tr><th>地點</th><th>接觸</th><th>加入</th><th>加藥</th><th>時數</th><th>每小時</th></tr></thead><tbody>${
-      locRows.map(r => `<tr><td>${esc(locName(r.id))}</td><td>${r.n}</td><td>${r.sg}</td><td>${r.med}</td><td>${r.h || "–"}</td><td>${r.rate != null ? r.rate.toFixed(1) : "–"}</td></tr>`).join("")
-    }</tbody></table></div>` : `<div class="empty-note">還沒有資料</div>`}
+    ${locRows.length ? `<div class="list">${locRows.map((r, i) => `<div class="stat-card"><div class="t"><span>${esc(locName(r.id))}</span><span class="rank">第 ${i + 1} 名</span></div>
+      <div class="kv"><div><b>${r.rate != null ? r.rate.toFixed(1) : "–"}</b><span>每小時加入</span></div><div><b>${r.sg}<small class="muted">/${r.n}</small></b><span>加入／接觸</span></div>
+      <div><b>${r.med}</b><span>已加藥</span></div><div><b>${r.h || "–"}</b><span>時數</span></div></div></div>`).join("")}</div>` : `<div class="empty-note">還沒有資料</div>`}
 
     <h2>哪種人最願意</h2>
     ${groupTable(C, "who", WHO)}
@@ -968,12 +985,12 @@ function renderStats() {
     ${groupTable(C, "age", AGE)}
 
     <h2>禮券：50 對 100</h2>
-    <div class="tiles" style="grid-template-columns:repeat(3,1fr)">
-      <div class="tile"><div class="n">${t100.length}</div><div class="k">100 元・加藥 ${medRate(t100) ?? "–"}${t100.length ? "%" : ""}</div></div>
-      <div class="tile"><div class="n">${t50.length}</div><div class="k">50 元・加藥 ${medRate(t50) ?? "–"}${t50.length ? "%" : ""}</div></div>
-      <div class="tile"><div class="n">${t0.length}</div><div class="k">沒拿禮券</div></div>
-    </div>
-    <div class="card insight" style="margin-top:8px">${insights.join("")}</div>
+    <div class="stat-card"><div class="kv" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div><b>${t100.length}</b><span>100 元・加藥 ${medRate(t100) ?? "–"}${t100.length ? "%" : ""}</span></div>
+      <div><b>${t50.length}</b><span>50 元・加藥 ${medRate(t50) ?? "–"}${t50.length ? "%" : ""}</span></div>
+      <div><b>${t0.length}</b><span>沒拿禮券</span></div>
+    </div></div>
+    <div class="card insight" style="margin-top:10px">${insights.join("")}</div>
 
     <h2>拒絕原因</h2>
     <div class="card">${bars(countTags(C.filter(c => c.outcome === "declined"), "reasons"))}</div>
